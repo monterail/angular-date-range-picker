@@ -9,22 +9,24 @@
   <script type="text/javascript">
     angular.module("testapp", ["datepicker"])
     angular.module("testapp").controller("TestCtrl", function($scope){
-      $scope.dates = [new Date("2012-11-05"), new Date("2013-01-25")]
+      $scope.range = moment().range("2012-11-05", "2013-01-25")
+
+      $scope.change = function(){
+        $scope.range = moment().range("2012-11-15", "2012-12-25")
+      }
     })
   </script>
+  <link rel="stylesheet" type="text/css" href="../src/angular-datepicker.css"/>
   <style type="text/css">
     body { font: 10px "Lucida Grande";}
-    .month { float: left; padding: 10px;}
-    .day { cursor: pointer;}
-    .day:hover { background: #000; color: #fff;}
-    .selected { background: #09f;}
   </style>
 </head>
 <body ng-app="testapp">
   <div ng-controller="TestCtrl">
-    <input type="text" datepicker ng-model="dates"/>
-    <pre>{{ dates }}</pre>
-    <input type="text" datepicker ng-model="dates"/>
+    <date-range-picker ng-model="range"></date-range-picker>
+    <pre>{{ range.start.toDate() }} - {{ range.end.toDate() }}</pre>
+    <date-range-picker ng-model="range"></date-range-picker>
+    <button ng-click="change()">Change</button>
   </div>
 </body>
 </html>

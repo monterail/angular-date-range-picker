@@ -1,0 +1,63 @@
+.angular-datepicker_input {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  height: 20px;
+  line-height: 20px;
+  display: inline-block;
+  position: relative;
+}
+.angular-datepicker_picker {
+  position: absolute;
+  top: 30px;
+  left: -1px;
+  width: 600px;
+  border: 1px solid #ccc;
+  background: #fff;
+  z-index: 1000;
+}
+.angular-datepicker_picker_close {
+
+}
+.angular-datepicker_picker_month {
+  width: 150px;
+  float: left;
+}
+.angular-datepicker_picker_month_name {
+  text-align: center;
+  font-weight: bold;
+}
+.angular-datepicker_picker_calendar {
+  border-collapse: collapse;
+  border-spacing:0;
+  padding: 0;
+  width: 100%;
+}
+.angular-datepicker_picker_calendar_weekday {
+  border-bottom: 1px solid #aaa;
+}
+.angular-datepicker_picker_calendar_day {
+  border: 1px solid #eee;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+}
+.angular-datepicker_picker_calendar_day:hover {
+  background: #000;
+  color: #fff;
+}
+.angular-datepicker_picker_calendar_day_selected {
+  background: #09f;
+}
+.angular-datepicker_picker_calendar_day_disabled {
+  color: #aaa;
+}
+.angular-datepicker_picker_calendar_day_disabled {
+  background: #fff;
+  color: #aaa;
+}
+.angular-datepicker_picker_prev-month, .angular-datepicker_picker_next-month {
+  float: left;
+}
+.angular-datepicker_picker_panel {
+  float: left;
+}
