@@ -4,7 +4,7 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
   template = """
   <div>
     <a href="#" ng-click="close()">close</a>
-    <div ng-repeat="month in _picker.months" class="month">
+    <div ng-repeat="month in months" class="month">
       {{ month.name }}
       <table>
         <tr ng-repeat="week in month.weeks">
@@ -14,6 +14,7 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
         </tr>
       </table>
     </div>
+    <select ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
   </div>
   """
 
@@ -22,71 +23,83 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
   scope:
     dates: "=ngModel"
   link: (scope, element, attrs, controller) ->
-    window.s = scope
-    console.log "dates", scope.dates
-
-    selection = null
     range = null
     domEl = null
     oneDayRange = moment().range(moment("2013-01-01"), moment("2013-01-02"))
 
-    scope._picker = {}
+    scope.quick = null
+    scope.quickList = [
+      {label: "This week",  range: moment().range(moment().startOf("week"), moment().endOf("week"))}
+      {label: "Next week",  range: moment().range(moment().startOf("week").add(1, "week"), moment().endOf("week").add(1, "week"))}
+      {label: "This month", range: moment().range(moment().startOf("month"), moment().endOf("month"))}
+      {label: "Next month", range: moment().range(moment().startOf("month").add(1, "month"), moment().endOf("month").add(1, "month"))}
+    ]
 
     setup = () ->
-      selection = moment().range(scope.dates[0], scope.dates[1])
-      start = moment(scope.dates[0]).startOf("month").startOf("day")
+      start = scope.selection.start.clone().startOf("month").startOf("day")
       end = start.clone().add(2, "months").endOf("month").startOf("day")
       range = moment().range(start, end)
 
     prepareData = () ->
-      scope._picker.months = []
+      scope.months = []
       startIndex = range.start.year()*12 + range.start.month()
 
       range.by oneDayRange, (date) ->
         m = date.year()*12 + date.month() - startIndex
         w = parseInt((7 + date.date() - date.day()) / 7)
         d = date.day()
-        s = selection.contains(date)
-        scope._picker.months[m] ||= {name: date.format("MMMM YYYY"), weeks: []}
-        scope._picker.months[m].weeks[w] ||= []
-        scope._picker.months[m].weeks[w][d] = {date: date, selected: s}
+        s = scope.selection.contains(date)
+        scope.months[m] ||= {name: date.format("MMMM YYYY"), weeks: []}
+        scope.months[m].weeks[w] ||= []
+        scope.months[m].weeks[w][d] = {date: date, selected: s}
 
       # Remove empty rows
-      for m in scope._picker.months
+      for m in scope.months
         if !m.weeks[0]
           m.weeks.splice(0, 1)
 
     scope.selecting = false
+    scope.opened = false
+
     scope.select = (day) ->
       scope.selecting = !scope.selecting
 
       if scope.selecting
-        selection = moment().range(day.date, day.date)
+        scope.selection = moment().range(day.date, day.date)
       else
-        selection = moment().range(selection.start, day.date)
-        scope.dates = [selection.start.toDate(), day.date.toDate()]
+        scope.selection = moment().range(scope.selection.start, day.date)
+        scope.dates = [scope.selection.start.toDate(), day.date.toDate()]
       prepareData()
+
 
     scope.close = () ->
       domEl.remove()
+      scope.opened = false
 
     scope.$watch "dates", ->
+      scope.selection = moment().range(scope.dates[0], scope.dates[1])
+      setup()
+      prepareData()
+
+    scope.$watch "quick", (q, o) ->
+      return unless q
+      scope.selection = scope.quick
       setup()
       prepareData()
 
     display = () ->
-      console.log "display"
       domEl = $compile(angular.element(template))(scope)
       body = angular.element(document.body)
       body.append(domEl)
 
-    open = () ->
+    scope.open = () ->
+      scope.selection = moment().range(scope.dates[0], scope.dates[1])
       setup()
       prepareData()
       display()
+      scope.opened = true
 
     element.bind "click", ->
-      console.log "click"
       scope.$apply ->
-        open()
+        if scope.opened then scope.close() else scope.open()
 
