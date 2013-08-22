@@ -3,7 +3,7 @@
 
   angular.module("datepicker").directive("datepicker", function($compile) {
     var template;
-    template = "<div>\n  <div ng-repeat=\"month in _picker.months\" class=\"month\">\n    {{ month.name }}\n    <table>\n      <tr ng-repeat=\"week in month.weeks\">\n        <td class=\"day\" ng-class=\"{selected: day.selected}\" ng-repeat=\"day in week\" ng-click=\"select(day)\">\n          {{ day.date.date() }}\n        </td>\n      </tr>\n    </table>\n  </div>\n</div>";
+    template = "<div>\n  <a href=\"#\" ng-click=\"close()\">close</a>\n  <div ng-repeat=\"month in _picker.months\" class=\"month\">\n    {{ month.name }}\n    <table>\n      <tr ng-repeat=\"week in month.weeks\">\n        <td class=\"day\" ng-class=\"{selected: day.selected}\" ng-repeat=\"day in week\" ng-click=\"select(day)\">\n          {{ day.date.date() }}\n        </td>\n      </tr>\n    </table>\n  </div>\n</div>";
     return {
       restrict: "A",
       replace: true,
@@ -11,11 +11,12 @@
         dates: "=ngModel"
       },
       link: function(scope, element, attrs, controller) {
-        var display, oneDayRange, open, prepareData, range, selection, setup;
+        var display, domEl, oneDayRange, open, prepareData, range, selection, setup;
         window.s = scope;
         console.log("dates", scope.dates);
         selection = null;
         range = null;
+        domEl = null;
         oneDayRange = moment().range(moment("2013-01-01"), moment("2013-01-02"));
         scope._picker = {};
         setup = function() {
@@ -67,12 +68,15 @@
           }
           return prepareData();
         };
+        scope.close = function() {
+          return domEl.remove();
+        };
         display = function() {
-          var body, picker;
+          var body;
           console.log("display");
-          picker = $compile(angular.element(template))(scope);
+          domEl = $compile(angular.element(template))(scope);
           body = angular.element(document.body);
-          return body.append(picker);
+          return body.append(domEl);
         };
         open = function() {
           setup();

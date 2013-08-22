@@ -3,6 +3,7 @@ angular.module "datepicker", []
 angular.module("datepicker").directive "datepicker", ($compile) ->
   template = """
   <div>
+    <a href="#" ng-click="close()">close</a>
     <div ng-repeat="month in _picker.months" class="month">
       {{ month.name }}
       <table>
@@ -26,6 +27,7 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
 
     selection = null
     range = null
+    domEl = null
     oneDayRange = moment().range(moment("2013-01-01"), moment("2013-01-02"))
 
     scope._picker = {}
@@ -64,11 +66,14 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
         scope.dates = [selection.start.toDate(), day.date.toDate()]
       prepareData()
 
+    scope.close = () ->
+      domEl.remove()
+
     display = () ->
       console.log "display"
-      picker = $compile(angular.element(template))(scope)
+      domEl = $compile(angular.element(template))(scope)
       body = angular.element(document.body)
-      body.append(picker)
+      body.append(domEl)
 
     open = () ->
       setup()
