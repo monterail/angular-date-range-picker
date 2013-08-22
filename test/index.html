@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+  <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
+  <script type="text/javascript" src="../bower_components/moment-range/lib/moment-range.js"></script>
+  <script type="text/javascript" src="../build/angular-datepicker.js"></script>
+  <script type="text/javascript">
+    angular.module("testapp", ["datepicker"])
+    angular.module("testapp").controller("TestCtrl", function($scope){
+      $scope.dates = [new Date("2013-06-05"), new Date("2013-08-25")]
+    })
+  </script>
+  <style type="text/css">
+    body { font: 10px "Lucida Grande";}
+    .month { float: left; padding: 10px;}
+    .day { cursor: pointer;}
+    .day:hover { background: #000; color: #fff;}
+    .selected { background: #09f;}
+  </style>
+</head>
+<body ng-app="testapp">
+  <div ng-controller="TestCtrl">
+    <input type="text" datepicker ng-model="dates"/>
+    <pre>{{ dates }}</pre>
+  </div>
+</body>
+</html>

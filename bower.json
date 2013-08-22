@@ -1,0 +1,17 @@
+{
+  "name": "angular-datepicker",
+  "version": "0.1.0",
+  "authors": [
+    "Tymon Tobolski <tymon.tobolski@monterail.com>"
+  ],
+  "repository": "git://github.com/monterail/angular-datepicker.git",
+  "description": "Date Picker without jQuery",
+  "main": "build/angular-datepicker.js",
+  "dependencies": {
+    "angular": "~1.0.7",
+    "moment": "~2.1.0",
+    "moment-range": "~0.1.6"
+  },
+  "license": "MIT",
+  "homepage": "http://github.com/monterail/angular-datepicker"
+}
