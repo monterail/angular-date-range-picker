@@ -34,15 +34,16 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
 
     setup = () ->
       selection = moment().range(scope.dates[0], scope.dates[1])
-      end = moment(scope.dates[1]).endOf("month")
-      range = moment().range(end.clone().subtract(3, "months").add(1, "day"), end)
+      start = moment(scope.dates[0]).startOf("month").startOf("day")
+      end = start.clone().add(2, "months").endOf("month").startOf("day")
+      range = moment().range(start, end)
 
     prepareData = () ->
-      startMonth = range.start.month()
       scope._picker.months = []
+      startIndex = range.start.year()*12 + range.start.month()
 
       range.by oneDayRange, (date) ->
-        m = date.month() - startMonth
+        m = date.year()*12 + date.month() - startIndex
         w = parseInt((7 + date.date() - date.day()) / 7)
         d = date.day()
         s = selection.contains(date)
@@ -68,6 +69,10 @@ angular.module("datepicker").directive "datepicker", ($compile) ->
 
     scope.close = () ->
       domEl.remove()
+
+    scope.$watch "dates", ->
+      setup()
+      prepareData()
 
     display = () ->
       console.log "display"

@@ -20,18 +20,19 @@
         oneDayRange = moment().range(moment("2013-01-01"), moment("2013-01-02"));
         scope._picker = {};
         setup = function() {
-          var end;
+          var end, start;
           selection = moment().range(scope.dates[0], scope.dates[1]);
-          end = moment(scope.dates[1]).endOf("month");
-          return range = moment().range(end.clone().subtract(3, "months").add(1, "day"), end);
+          start = moment(scope.dates[0]).startOf("month").startOf("day");
+          end = start.clone().add(2, "months").endOf("month").startOf("day");
+          return range = moment().range(start, end);
         };
         prepareData = function() {
-          var m, startMonth, _i, _len, _ref, _results;
-          startMonth = range.start.month();
+          var m, startIndex, _i, _len, _ref, _results;
           scope._picker.months = [];
+          startIndex = range.start.year() * 12 + range.start.month();
           range.by(oneDayRange, function(date) {
             var d, m, s, w, _base, _base1;
-            m = date.month() - startMonth;
+            m = date.year() * 12 + date.month() - startIndex;
             w = parseInt((7 + date.date() - date.day()) / 7);
             d = date.day();
             s = selection.contains(date);
@@ -71,6 +72,10 @@
         scope.close = function() {
           return domEl.remove();
         };
+        scope.$watch("dates", function() {
+          setup();
+          return prepareData();
+        });
         display = function() {
           var body;
           console.log("display");
