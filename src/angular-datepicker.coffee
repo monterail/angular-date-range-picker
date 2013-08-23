@@ -23,7 +23,8 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
     <button ng-click="move(+1, $event)" class="angular-datepicker_picker_next-month">></button>
     <div class=" class="angular-datepicker_picker_panel">
       Select range: <select ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
-      <a href="#" ng-click="hide()" class="angular-datepicker_picker_close">close</a>
+      <button ng-click="ok($event)">Apply</button>
+      <a href="#" ng-click="hide($event)" class="angular-datepicker_picker_close">close</a>
     </div>
   </div>
   """
@@ -33,11 +34,12 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
   replace: true
   template: """
   <span class="angular-datepicker_input">
-    {{ selection.start.format("ll") }} - {{ selection.end.format("ll") }}
+    <span ng-show="model">{{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>
+    <span ng-hide="model">Select date range</span>
   </span>
   """
   scope:
-    selection: "=ngModel" # can't use ngModelController, we need isolated scope
+    model: "=ngModel" # can't use ngModelController, we need isolated scope
 
   link: ($scope, element, attrs) ->
     $scope.quickList = [
@@ -48,15 +50,20 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
     ]
     $scope.quick = null
     $scope.range = null
-    $scope.selectiong = false
+    $scope.selecting = false
     $scope.visible = false
     $scope.start = null
 
     _calculateRange = () ->
-      start = $scope.selection.start.clone().startOf("month").startOf("day")
-      end = start.clone().add(2, "months").endOf("month").startOf("day")
-      $scope.range = moment().range(start, end)
-      console.log "$scope.range", $scope.range.start.toDate(), $scope.range.end.toDate()
+      $scope.range = if $scope.selection
+        start = $scope.selection.start.clone().startOf("month").startOf("day")
+        end = start.clone().add(2, "months").endOf("month").startOf("day")
+        moment().range(start, end)
+      else
+        moment().range(
+          moment().startOf("month").subtract(1, "month").startOf("day"),
+          moment().endOf("month").add(1, "month").startOf("day")
+        )
 
     _prepare = () ->
       $scope.months = []
@@ -74,7 +81,7 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
           sel = date == $scope.start
           dis = date < $scope.start
         else
-          sel = $scope.selection.contains(date)
+          sel = $scope.selection && $scope.selection.contains(date)
 
         $scope.months[m] ||= {name: date.format("MMMM YYYY"), weeks: []}
         $scope.months[m].weeks[w] ||= []
@@ -91,8 +98,14 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
     $scope.show = () ->
       $scope.visible = true
 
-    $scope.hide = () ->
+    $scope.hide = ($event) ->
+      $event?.stopPropagation?()
       $scope.visible = false
+
+    $scope.ok = ($event) ->
+      $event?.stopPropagation?()
+      $scope.model = $scope.selection
+      $scope.hide()
 
     $scope.select = (day, $event) ->
       $event?.stopPropagation?()
@@ -106,6 +119,7 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
       else
         $scope.selection = moment().range($scope.start, day.date)
         $scope.start = null
+        _prepare()
 
     $scope.move = (n, $event) ->
       $event?.stopPropagation?()
@@ -121,8 +135,10 @@ angular.module("datepicker").directive "dateRangePicker", ($compile) ->
       _calculateRange()
       _prepare()
 
-    $scope.$watch "selection", (s,o) ->
-      return if !s || s == o
+    $scope.$watch "model", (s,o) ->
+      return if !s
+      $scope.selection = $scope.model
+      _calculateRange()
       _prepare()
 
     # create DOM and bind event

@@ -7,6 +7,8 @@ module.exports = (grunt) ->
   grunt.config.init
     pkg: grunt.file.readJSON "package.json"
     coffee:
+      options:
+        sourceMap: true
       default:
         files:
           "build/angular-datepicker.js": "src/angular-datepicker.coffee"
