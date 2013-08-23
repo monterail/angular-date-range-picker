@@ -79,6 +79,9 @@
           return _results;
         };
         $scope.show = function() {
+          $scope.selection = $scope.model;
+          _calculateRange();
+          _prepare();
           return $scope.visible = true;
         };
         $scope.hide = function($event) {
@@ -134,14 +137,6 @@
           _calculateRange();
           return _prepare();
         });
-        $scope.$watch("model", function(s, o) {
-          if (!s) {
-            return;
-          }
-          $scope.selection = $scope.model;
-          _calculateRange();
-          return _prepare();
-        });
         domEl = $compile(angular.element(pickerTemplate))($scope);
         element.append(domEl);
         element.bind("click", function(e) {
@@ -170,7 +165,3 @@
   });
 
 }).call(this);
-
-/*
-//@ sourceMappingURL=angular-date-range-picker.js.map
-*/

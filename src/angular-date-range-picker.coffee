@@ -96,6 +96,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ($compile) ->
           m.weeks.splice(0, 1)
 
     $scope.show = () ->
+      $scope.selection = $scope.model
+      _calculateRange()
+      _prepare()
       $scope.visible = true
 
     $scope.hide = ($event) ->
@@ -132,12 +135,6 @@ angular.module("dateRangePicker").directive "dateRangePicker", ($compile) ->
     $scope.$watch "quick", (q, o) ->
       return unless q
       $scope.selection = $scope.quick
-      _calculateRange()
-      _prepare()
-
-    $scope.$watch "model", (s,o) ->
-      return if !s
-      $scope.selection = $scope.model
       _calculateRange()
       _prepare()
 
