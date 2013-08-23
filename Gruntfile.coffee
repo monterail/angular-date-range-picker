@@ -8,8 +8,6 @@ module.exports = (grunt) ->
   grunt.config.init
     pkg: grunt.file.readJSON "package.json"
     coffee:
-      options:
-        sourceMap: true
       default:
         files:
           "build/angular-date-range-picker.js": "src/angular-date-range-picker.coffee"
@@ -31,8 +29,5 @@ module.exports = (grunt) ->
         files: [
           {expand: true, cwd: 'src/', src: ['*.css'], dest: 'build/', filter: 'isFile'}
         ]
-
-
-
 
   grunt.registerTask "default", ["coffee", "copy", "uglify"]
