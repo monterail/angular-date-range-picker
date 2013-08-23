@@ -1,7 +1,7 @@
 # Pure Angular Datepicker, without jQuery
 
 ```js
-angular.module('myApp', ['datepicker']);
+angular.module('myApp', ['dateRangePicker']);
 // ...
 
 $scope.dates = [start, end]
@@ -9,7 +9,7 @@ $scope.dates = [start, end]
 
 
 ```html
-<input type="text" datepicker ng-model="dates"/>
+<input type="text" date-range-picker ng-model="dates"/>
 ```
 
 

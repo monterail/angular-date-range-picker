@@ -5,9 +5,9 @@
   <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
   <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
   <script type="text/javascript" src="../bower_components/moment-range/lib/moment-range.js"></script>
-  <script type="text/javascript" src="../build/angular-datepicker.js"></script>
+  <script type="text/javascript" src="../build/angular-date-range-picker.js"></script>
   <script type="text/javascript">
-    angular.module("testapp", ["datepicker"])
+    angular.module("testapp", ["dateRangePicker"])
     angular.module("testapp").controller("TestCtrl", function($scope){
       $scope.range = moment().range("2012-11-05", "2013-01-25")
 
@@ -16,7 +16,7 @@
       }
     })
   </script>
-  <link rel="stylesheet" type="text/css" href="../src/angular-datepicker.css"/>
+  <link rel="stylesheet" type="text/css" href="../src/angular-date-range-picker.css"/>
   <style type="text/css">
     body { font: 10px "Lucida Grande";}
   </style>

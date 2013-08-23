@@ -1,14 +1,14 @@
 (function() {
-  angular.module("datepicker", []);
+  angular.module("dateRangePicker", []);
 
-  angular.module("datepicker").directive("dateRangePicker", function($compile) {
+  angular.module("dateRangePicker").directive("dateRangePicker", function($compile) {
     var oneDayRange, pickerTemplate;
-    pickerTemplate = "<div ng-show=\"visible\" class=\"angular-datepicker_picker\">\n  <button ng-click=\"move(-1, $event)\" class=\"angular-datepicker_picker_prev-month\"><</button>\n  <div ng-repeat=\"month in months\" class=\"angular-datepicker_picker_month\">\n    <div class=\"angular-datepicker_picker_month_name\">{{ month.name }}</div>\n    <table class=\"angular-datepicker_picker_calendar\">\n      <tr>\n        <th ng-repeat=\"day in month.weeks[1]\" class=\"angular-datepicker_picker_calendar_weekday\">\n          {{ day.date.format(\"dd\") }}\n        </th>\n      </tr>\n      <tr ng-repeat=\"week in month.weeks\">\n        <td class=\"angular-datepicker_picker_calendar_day\" ng-class='{\"angular-datepicker_picker_calendar_day_selected\": day.selected, \"angular-datepicker_picker_calendar_day_disabled\": day.disabled}' ng-repeat=\"day in week\" ng-click=\"select(day, $event)\">\n          {{ day.date.date() }}\n        </td>\n      </tr>\n    </table>\n  </div>\n  <button ng-click=\"move(+1, $event)\" class=\"angular-datepicker_picker_next-month\">></button>\n  <div class=\" class=\"angular-datepicker_picker_panel\">\n    Select range: <select ng-model=\"quick\" ng-options=\"e.range as e.label for e in quickList\"></select>\n    <button ng-click=\"ok($event)\">Apply</button>\n    <a href=\"#\" ng-click=\"hide($event)\" class=\"angular-datepicker_picker_close\">close</a>\n  </div>\n</div>";
+    pickerTemplate = "<div ng-show=\"visible\" class=\"angular-date-range-picker_picker\">\n  <button ng-click=\"move(-1, $event)\" class=\"angular-date-range-picker_picker_prev-month\"><</button>\n  <div ng-repeat=\"month in months\" class=\"angular-date-range-picker_picker_month\">\n    <div class=\"angular-date-range-picker_picker_month_name\">{{ month.name }}</div>\n    <table class=\"angular-date-range-picker_picker_calendar\">\n      <tr>\n        <th ng-repeat=\"day in month.weeks[1]\" class=\"angular-date-range-picker_picker_calendar_weekday\">\n          {{ day.date.format(\"dd\") }}\n        </th>\n      </tr>\n      <tr ng-repeat=\"week in month.weeks\">\n        <td class=\"angular-date-range-picker_picker_calendar_day\" ng-class='{\"angular-date-range-picker_picker_calendar_day_selected\": day.selected, \"angular-date-range-picker_picker_calendar_day_disabled\": day.disabled}' ng-repeat=\"day in week\" ng-click=\"select(day, $event)\">\n          {{ day.date.date() }}\n        </td>\n      </tr>\n    </table>\n  </div>\n  <button ng-click=\"move(+1, $event)\" class=\"angular-date-range-picker_picker_next-month\">></button>\n  <div class=\" class=\"angular-date-range-picker_picker_panel\">\n    Select range: <select ng-model=\"quick\" ng-options=\"e.range as e.label for e in quickList\"></select>\n    <button ng-click=\"ok($event)\">Apply</button>\n    <a href=\"#\" ng-click=\"hide($event)\" class=\"angular-date-range-picker_picker_close\">close</a>\n  </div>\n</div>";
     oneDayRange = moment().range("2013-01-01", "2013-01-02");
     return {
       restrict: "AE",
       replace: true,
-      template: "<span class=\"angular-datepicker_input\">\n  <span ng-show=\"model\">{{ model.start.format(\"ll\") }} - {{ model.end.format(\"ll\") }}</span>\n  <span ng-hide=\"model\">Select date range</span>\n</span>",
+      template: "<span class=\"angular-date-range-picker_input\">\n  <span ng-show=\"model\">{{ model.start.format(\"ll\") }} - {{ model.end.format(\"ll\") }}</span>\n  <span ng-hide=\"model\">Select date range</span>\n</span>",
       scope: {
         model: "=ngModel"
       },
@@ -172,5 +172,5 @@
 }).call(this);
 
 /*
-//@ sourceMappingURL=angular-datepicker.js.map
+//@ sourceMappingURL=angular-date-range-picker.js.map
 */

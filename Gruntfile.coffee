@@ -11,7 +11,7 @@ module.exports = (grunt) ->
         sourceMap: true
       default:
         files:
-          "build/angular-datepicker.js": "src/angular-datepicker.coffee"
+          "build/angular-date-range-picker.js": "src/angular-date-range-picker.coffee"
     uglify:
       options:
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'

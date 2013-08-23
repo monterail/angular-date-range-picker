@@ -1,12 +1,12 @@
 {
-  "name": "angular-datepicker",
+  "name": "angular-date-range-picker",
   "version": "0.1.0",
   "authors": [
     "Tymon Tobolski <tymon.tobolski@monterail.com>"
   ],
-  "repository": "git://github.com/monterail/angular-datepicker.git",
+  "repository": "git://github.com/monterail/angular-dates-range-picker.git",
   "description": "Date Picker without jQuery",
-  "main": "build/angular-datepicker.js",
+  "main": "build/angular-date-range-picker.js",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.7.0",
@@ -20,7 +20,7 @@
     "picker"
   ],
   "license": "MIT",
-  "homepage": "http://github.com/monterail/angular-datepicker",
+  "homepage": "http://github.com/monterail/angular-date-range-picker",
   "ignore": [
     "**/.*",
     "node_modules",
