@@ -1,6 +1,6 @@
 angular.module "dateRangePicker", []
 
-angular.module("dateRangePicker").directive "dateRangePicker", ($compile) ->
+angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
   # constants
   pickerTemplate = """
   <div ng-show="visible" class="angular-date-range-picker_picker">
@@ -153,4 +153,4 @@ angular.module("dateRangePicker").directive "dateRangePicker", ($compile) ->
 
     _calculateRange()
     _prepare()
-
+]
