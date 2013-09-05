@@ -3,28 +3,30 @@ angular.module "dateRangePicker", []
 angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
   # constants
   pickerTemplate = """
-  <div ng-show="visible" class="angular-date-range-picker_picker">
-    <button ng-click="move(-1, $event)" class="angular-date-range-picker_picker_prev-month"><</button>
-    <div ng-repeat="month in months" class="angular-date-range-picker_picker_month">
-      <div class="angular-date-range-picker_picker_month_name">{{ month.name }}</div>
-      <table class="angular-date-range-picker_picker_calendar">
-        <tr>
-          <th ng-repeat="day in month.weeks[1]" class="angular-date-range-picker_picker_calendar_weekday">
-            {{ day.date.format("dd") }}
-          </th>
-        </tr>
-        <tr ng-repeat="week in month.weeks">
-          <td class="angular-date-range-picker_picker_calendar_day" ng-class='{"angular-date-range-picker_picker_calendar_day_selected": day.selected, "angular-date-range-picker_picker_calendar_day_disabled": day.disabled}' ng-repeat="day in week" ng-click="select(day, $event)">
-            {{ day.date.date() }}
-          </td>
-        </tr>
-      </table>
+  <div ng-show="visible" class="angular-date-range-picker__picker">
+    <div class="angular-date-range-picker__timesheet">
+      <button ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</button>
+      <div ng-repeat="month in months" class="angular-date-range-picker__month">
+        <div class="angular-date-range-picker__month-name">{{ month.name }}</div>
+        <table class="angular-date-range-picker__calendar">
+          <tr>
+            <th ng-repeat="day in month.weeks[1]" class="angular-date-range-picker__calendar-weekday">
+              {{ day.date.format("dd") }}
+            </th>
+          </tr>
+          <tr ng-repeat="week in month.weeks">
+            <td class="angular-date-range-picker__calendar-day" ng-class='{"angular-date-range-picker__calendar-day-selected": day.selected, "angular-date-range-picker__calendar-day-disabled": day.disabled}' ng-repeat="day in week" ng-click="select(day, $event)">
+              {{ day.date.date() }}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <button ng-click="move(+1, $event)" class="angular-date-range-picker__next-month">&#9654;</button>
     </div>
-    <button ng-click="move(+1, $event)" class="angular-date-range-picker_picker_next-month">></button>
-    <div class=" class="angular-date-range-picker_picker_panel">
+    <div class="angular-date-range-picker__panel">
       Select range: <select ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
-      <button ng-click="ok($event)">Apply</button>
-      <a href="#" ng-click="hide($event)" class="angular-date-range-picker_picker_close">close</a>
+      <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
+      <a href="#" ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
     </div>
   </div>
   """
@@ -33,7 +35,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
   restrict: "AE"
   replace: true
   template: """
-  <span class="angular-date-range-picker_input">
+  <span class="angular-date-range-picker__input">
     <span ng-show="model">{{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>
     <span ng-hide="model">Select date range</span>
   </span>
