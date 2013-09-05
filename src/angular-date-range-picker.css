@@ -22,6 +22,7 @@
 .angular-date-range-picker__apply {
   background: transparent;
   border: none;
+  cursor: pointer;
 }
 .angular-date-range-picker__apply, .angular-date-range-picker__cancel {
   padding: 0 8px;

@@ -22,8 +22,8 @@ module.exports = (grunt) ->
         npm: false
     watch:
       scripts:
-        files: ['src/*.coffee']
-        tasks: ['coffee']
+        files: ['src/*']
+        tasks: ['default']
     copy:
       main:
         files: [
