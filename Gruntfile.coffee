@@ -1,8 +1,8 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-less')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-release')
 
   grunt.config.init
@@ -24,10 +24,9 @@ module.exports = (grunt) ->
       scripts:
         files: ['src/*']
         tasks: ['default']
-    copy:
+    less:
       main:
-        files: [
-          {expand: true, cwd: 'src/', src: ['*.css'], dest: 'build/', filter: 'isFile'}
-        ]
+        files:
+          "build/angular-date-range-picker.css": "src/angular-date-range-picker.less"
 
-  grunt.registerTask "default", ["coffee", "copy", "uglify"]
+  grunt.registerTask "default", ["coffee", "less", "uglify"]
