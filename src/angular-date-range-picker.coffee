@@ -24,7 +24,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       <button ng-click="move(+1, $event)" class="angular-date-range-picker__next-month">&#9654;</button>
     </div>
     <div class="angular-date-range-picker__panel">
-      Select range: <select ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
+      Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
       <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
       <a href="#" ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
     </div>
@@ -106,6 +106,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.hide = ($event) ->
       $event?.stopPropagation?()
       $scope.visible = false
+
+    $scope.prevent_select = ($event) ->
+      $event?.stopPropagation?()
 
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
