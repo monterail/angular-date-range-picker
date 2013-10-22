@@ -1,6 +1,7 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-less')
+  grunt.loadNpmTasks('grunt-autoprefixer')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-release')
@@ -28,5 +29,8 @@ module.exports = (grunt) ->
       main:
         files:
           "build/angular-date-range-picker.css": "src/angular-date-range-picker.less"
+    autoprefixer:
+      no_dest:
+        src: "build/angular-date-range-picker.css"
 
-  grunt.registerTask "default", ["coffee", "less", "uglify"]
+  grunt.registerTask "default", ["coffee", "less", "autoprefixer", "uglify"]

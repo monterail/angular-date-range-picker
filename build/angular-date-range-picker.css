@@ -2,16 +2,20 @@
   padding: 8px;
   color: #616161;
 }
+
 .angular-date-range-picker__next-month {
   right: 4px;
 }
+
 .angular-date-range-picker__prev-month {
   left: 4px;
 }
+
 .angular-date-range-picker__prev-month:hover,
 .angular-date-range-picker__next-month:hover {
   color: #fff;
 }
+
 .angular-date-range-picker__prev-month,
 .angular-date-range-picker__next-month {
   position: absolute;
@@ -20,92 +24,115 @@
   border: none;
   color: #ccefff;
   background: transparent;
+  -webkit-transition: color 0.3s;
   transition: color 0.3s;
   cursor: pointer;
   text-align: center;
   font-weight: bold;
 }
+
 .angular-date-range-picker__calendar-day-selected {
   color: #59b9e3;
   background: #ebfaff;
 }
+
 .angular-date-range-picker__apply {
   background: transparent;
   border: none;
   cursor: pointer;
 }
+
 .angular-date-range-picker__input {
-  border: 1px solid #e1e5fa;
+  border: 1px solid #c7c6cb;
   padding: 5px 10px;
-  height: 20px;
+  height: 30px;
   line-height: 20px;
   display: inline-block;
   position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 3px;
 }
+
 .angular-date-range-picker__apply:hover,
 .angular-date-range-picker__cancel:hover {
   background: #70c4e9;
   color: #fff;
 }
+
 .angular-date-range-picker__calendar-day-disabled {
   color: #aaa;
   color: #cbcbcb;
 }
+
 .angular-date-range-picker__calendar {
   border-collapse: collapse;
   border-spacing: 0;
   padding: 0;
   width: 100%;
 }
+
 .angular-date-range-picker__timesheet {
   border-radius: 4px 4px 0 0;
   overflow: hidden;
 }
+
 .angular-date-range-picker__timesheet:before,
 .angular-date-range-picker__timesheet:after {
   content: " ";
   display: table;
 }
+
 .angular-date-range-picker__timesheet:after {
   clear: both;
 }
+
 .angular-date-range-picker__calendar-day {
   border: 0px solid #fff;
   text-align: center;
   cursor: pointer;
   color: #616161;
   padding: 0;
+  -webkit-transition: color 0.3s, background-color 0.3s;
   transition: color 0.3s, background-color 0.3s;
 }
+
 .angular-date-range-picker__month {
   width: 150px;
   float: left;
 }
+
 .angular-date-range-picker__calendar-weekday {
   background: #70c4e9;
   color: #fff;
   font-weight: normal;
 }
+
 .angular-date-range-picker__picker {
   position: absolute;
   top: 30px;
   left: -1px;
   width: 450px;
   border-radius: 4px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   background: #fff;
   z-index: 1000;
 }
+
 .angular-date-range-picker__calendar-day:hover {
   background: #59bae4;
   color: #fff;
 }
+
 .angular-date-range-picker__month-name {
   text-align: center;
   background: #70c4e9;
   color: #fff;
   padding-top: 6px;
 }
+
 .angular-date-range-picker__apply,
 .angular-date-range-picker__cancel {
   padding: 0 8px;
@@ -114,8 +141,10 @@
   line-height: 20px;
   color: #70c4e9;
   font-size: 11px;
+  -webkit-transition: color 0.3s, background-color 0.3s;
   transition: color 0.3s, background-color 0.3s;
 }
+
 .angular-date-range-picker__cancel {
   text-decoration: none;
 }
