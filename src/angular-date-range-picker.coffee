@@ -40,6 +40,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
   </div>
   """
   oneDayRange = moment().range("2013-01-01", "2013-01-02")
+  CUSTOM = "CUSTOM"
 
   restrict: "AE"
   replace: true
@@ -53,18 +54,54 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     model: "=ngModel" # can't use ngModelController, we need isolated scope
 
   link: ($scope, element, attrs) ->
-    $scope.quickList = [
-      {label: "This week",      range: moment().range(moment().startOf("week"), moment().endOf("week"))}
-      {label: "Next week",      range: moment().range(moment().startOf("week").add(1, "week"), moment().add(1, "week").endOf("week"))}
-      {label: "This fortnight", range: moment().range(moment().startOf("week"), moment().add(1, "week").endOf("week"))}
-      {label: "This month",     range: moment().range(moment().startOf("month"), moment().endOf("month"))}
-      {label: "Next month",     range: moment().range(moment().startOf("month").add(1, "month"), moment().add(1, "month").endOf("month"))}
+    $scope.quickListDefinitions = [
+      {
+        label: "This week",
+        range: moment().range(
+          moment().startOf("week").startOf("day"),
+          moment().endOf("week").startOf("day")
+        )
+      }
+      {
+        label: "Next week",
+        range: moment().range(
+          moment().startOf("week").add(1, "week").startOf("day"),
+          moment().add(1, "week").endOf("week").startOf("day")
+        )
+      }
+      {
+        label: "This fortnight",
+        range: moment().range(
+          moment().startOf("week").startOf("day"),
+          moment().add(1, "week").endOf("week").startOf("day")
+        )
+      }
+      {
+        label: "This month",
+        range: moment().range(
+          moment().startOf("month").startOf("day"),
+          moment().endOf("month").startOf("day")
+        )
+      }
+      {
+        label: "Next month",
+        range: moment().range(
+          moment().startOf("month").add(1, "month").startOf("day"),
+          moment().add(1, "month").endOf("month").startOf("day")
+        )
+      }
     ]
     $scope.quick = null
     $scope.range = null
     $scope.selecting = false
     $scope.visible = false
     $scope.start = null
+
+    _makeQuickList = (includeCustom = false) ->
+      $scope.quickList = []
+      $scope.quickList.push(label: "Custom", range: CUSTOM) if includeCustom
+      for e in $scope.quickListDefinitions
+        $scope.quickList.push(e)
 
     _calculateRange = () ->
       $scope.range = if $scope.selection
@@ -80,11 +117,14 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     _checkQuickList = () ->
       return unless $scope.selection
       for e in $scope.quickList
-        if $scope.selection.start.startOf("day").unix() == e.range.start.startOf("day").unix() and
+        if e.range != CUSTOM and $scope.selection.start.startOf("day").unix() == e.range.start.startOf("day").unix() and
             $scope.selection.end.startOf("day").unix() == e.range.end.startOf("day").unix()
           $scope.quick = e.range
+          _makeQuickList()
           return
-      $scope.quick = null
+
+      $scope.quick = CUSTOM
+      _makeQuickList(true)
 
 
     _prepare = () ->
@@ -135,6 +175,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.prevent_select = ($event) ->
       $event?.stopPropagation?()
 
+
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
       $scope.model = $scope.selection
@@ -166,8 +207,10 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       $event?.stopPropagation?()
 
     $scope.$watch "quick", (q, o) ->
-      return unless q
+      return if !q || q == CUSTOM
       $scope.selection = $scope.quick
+      $scope.selecting = false
+      $scope.start = null
       _calculateRange()
       _prepare()
 
@@ -184,6 +227,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     angular.element(document).bind "click", (e) ->
       $scope.$apply -> $scope.hide()
 
+    _makeQuickList()
     _calculateRange()
     _prepare()
 ]
