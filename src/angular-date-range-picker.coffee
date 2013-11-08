@@ -1,22 +1,27 @@
-angular.module "dateRangePicker", []
+angular.module "dateRangePicker", ['pasvaz.bindonce']
 
 angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
   # constants
   pickerTemplate = """
-  <div ng-show="visible" class="angular-date-range-picker__picker">
+  <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)">
     <div class="angular-date-range-picker__timesheet">
       <button ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</button>
-      <div ng-repeat="month in months" class="angular-date-range-picker__month">
-        <div class="angular-date-range-picker__month-name">{{ month.name }}</div>
+      <div bindonce ng-repeat="month in months" class="angular-date-range-picker__month">
+        <div class="angular-date-range-picker__month-name" bo-text="month.name"></div>
         <table class="angular-date-range-picker__calendar">
           <tr>
-            <th ng-repeat="day in month.weeks[1]" class="angular-date-range-picker__calendar-weekday">
-              {{ day.date.format("dd") }}
+            <th bindonce ng-repeat="day in month.weeks[1]" class="angular-date-range-picker__calendar-weekday" bo-text="day.date.format('dd')">
             </th>
           </tr>
-          <tr ng-repeat="week in month.weeks">
-            <td class="angular-date-range-picker__calendar-day" ng-class='{"angular-date-range-picker__calendar-day-selected": day.selected, "angular-date-range-picker__calendar-day-disabled": day.disabled}' ng-repeat="day in week" ng-click="select(day, $event)">
-              {{ day.date.date() }}
+          <tr bindonce ng-repeat="week in month.weeks">
+            <td
+                bo-class='{
+                  "angular-date-range-picker__calendar-day": day,
+                  "angular-date-range-picker__calendar-day-selected": day.selected,
+                  "angular-date-range-picker__calendar-day-disabled": day.disabled,
+                  "angular-date-range-picker__calendar-day-start": day.start
+                }'
+                ng-repeat="day in week" ng-click="select(day, $event)" bo-text="day.date.date()">
             </td>
           </tr>
         </table>
@@ -24,9 +29,13 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       <button ng-click="move(+1, $event)" class="angular-date-range-picker__next-month">&#9654;</button>
     </div>
     <div class="angular-date-range-picker__panel">
-      Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
-      <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
-      <a href="#" ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
+      <div>
+        Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
+      </div>
+      <div class="angular-date-range-picker__buttons">
+        <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
+        <a ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
+      </div>
     </div>
   </div>
   """
@@ -45,10 +54,11 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
 
   link: ($scope, element, attrs) ->
     $scope.quickList = [
-      {label: "This week",  range: moment().range(moment().startOf("week"), moment().endOf("week"))}
-      {label: "Next week",  range: moment().range(moment().startOf("week").add(1, "week"), moment().endOf("week").add(1, "week"))}
-      {label: "This month", range: moment().range(moment().startOf("month"), moment().endOf("month"))}
-      {label: "Next month", range: moment().range(moment().startOf("month").add(1, "month"), moment().endOf("month").add(1, "month"))}
+      {label: "This week",      range: moment().range(moment().startOf("week"), moment().endOf("week"))}
+      {label: "Next week",      range: moment().range(moment().startOf("week").add(1, "week"), moment().add(1, "week").endOf("week"))}
+      {label: "This fortnight", range: moment().range(moment().startOf("week"), moment().add(1, "week").endOf("week"))}
+      {label: "This month",     range: moment().range(moment().startOf("month"), moment().endOf("month"))}
+      {label: "Next month",     range: moment().range(moment().startOf("month").add(1, "month"), moment().add(1, "month").endOf("month"))}
     ]
     $scope.quick = null
     $scope.range = null
@@ -67,14 +77,26 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           moment().endOf("month").add(1, "month").startOf("day")
         )
 
+    _checkQuickList = () ->
+      return unless $scope.selection
+      for e in $scope.quickList
+        if $scope.selection.start.startOf("day").unix() == e.range.start.startOf("day").unix() and
+            $scope.selection.end.startOf("day").unix() == e.range.end.startOf("day").unix()
+          $scope.quick = e.range
+          return
+      $scope.quick = null
+
+
     _prepare = () ->
       $scope.months = []
       startIndex = $scope.range.start.year()*12 + $scope.range.start.month()
+      startDay = moment().startOf("week").day()
 
       $scope.range.by oneDayRange, (date) ->
+        d = date.day() - startDay
+        d = 7+d if d < 0 # (d == -1 fix for sunday)
         m = date.year()*12 + date.month() - startIndex
-        w = parseInt((7 + date.date() - date.day()) / 7)
-        d = date.day()
+        w = parseInt((7 + date.date() - d) / 7)
 
         sel = false
         dis = false
@@ -91,11 +113,14 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           date:     date
           selected: sel
           disabled: dis
+          start:    ($scope.start && $scope.start.unix() == date.unix())
 
       # Remove empty rows
       for m in $scope.months
         if !m.weeks[0]
           m.weeks.splice(0, 1)
+
+      _checkQuickList()
 
     $scope.show = () ->
       $scope.selection = $scope.model
@@ -136,6 +161,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
         $scope.range.start.clone().add(2, "months").endOf("month").startOf("day")
       )
       _prepare()
+
+    $scope.handlePickerClick = ($event) ->
+      $event?.stopPropagation?()
 
     $scope.$watch "quick", (q, o) ->
       return unless q

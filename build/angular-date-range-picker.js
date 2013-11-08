@@ -1,10 +1,10 @@
 (function() {
-  angular.module("dateRangePicker", []);
+  angular.module("dateRangePicker", ['pasvaz.bindonce']);
 
   angular.module("dateRangePicker").directive("dateRangePicker", [
     "$compile", function($compile) {
       var oneDayRange, pickerTemplate;
-      pickerTemplate = "<div ng-show=\"visible\" class=\"angular-date-range-picker__picker\">\n  <div class=\"angular-date-range-picker__timesheet\">\n    <button ng-click=\"move(-1, $event)\" class=\"angular-date-range-picker__prev-month\">&#9664;</button>\n    <div ng-repeat=\"month in months\" class=\"angular-date-range-picker__month\">\n      <div class=\"angular-date-range-picker__month-name\">{{ month.name }}</div>\n      <table class=\"angular-date-range-picker__calendar\">\n        <tr>\n          <th ng-repeat=\"day in month.weeks[1]\" class=\"angular-date-range-picker__calendar-weekday\">\n            {{ day.date.format(\"dd\") }}\n          </th>\n        </tr>\n        <tr ng-repeat=\"week in month.weeks\">\n          <td class=\"angular-date-range-picker__calendar-day\" ng-class='{\"angular-date-range-picker__calendar-day-selected\": day.selected, \"angular-date-range-picker__calendar-day-disabled\": day.disabled}' ng-repeat=\"day in week\" ng-click=\"select(day, $event)\">\n            {{ day.date.date() }}\n          </td>\n        </tr>\n      </table>\n    </div>\n    <button ng-click=\"move(+1, $event)\" class=\"angular-date-range-picker__next-month\">&#9654;</button>\n  </div>\n  <div class=\"angular-date-range-picker__panel\">\n    Select range: <select ng-click=\"prevent_select($event)\" ng-model=\"quick\" ng-options=\"e.range as e.label for e in quickList\"></select>\n    <button ng-click=\"ok($event)\" class=\"angular-date-range-picker__apply\">Apply</button>\n    <a href=\"#\" ng-click=\"hide($event)\" class=\"angular-date-range-picker__cancel\">cancel</a>\n  </div>\n</div>";
+      pickerTemplate = "<div ng-show=\"visible\" class=\"angular-date-range-picker__picker\" ng-click=\"handlePickerClick($event)\">\n  <div class=\"angular-date-range-picker__timesheet\">\n    <button ng-click=\"move(-1, $event)\" class=\"angular-date-range-picker__prev-month\">&#9664;</button>\n    <div bindonce ng-repeat=\"month in months\" class=\"angular-date-range-picker__month\">\n      <div class=\"angular-date-range-picker__month-name\" bo-text=\"month.name\"></div>\n      <table class=\"angular-date-range-picker__calendar\">\n        <tr>\n          <th bindonce ng-repeat=\"day in month.weeks[1]\" class=\"angular-date-range-picker__calendar-weekday\" bo-text=\"day.date.format('dd')\">\n          </th>\n        </tr>\n        <tr bindonce ng-repeat=\"week in month.weeks\">\n          <td\n              bo-class='{\n                \"angular-date-range-picker__calendar-day\": day,\n                \"angular-date-range-picker__calendar-day-selected\": day.selected,\n                \"angular-date-range-picker__calendar-day-disabled\": day.disabled,\n                \"angular-date-range-picker__calendar-day-start\": day.start\n              }'\n              ng-repeat=\"day in week\" ng-click=\"select(day, $event)\" bo-text=\"day.date.date()\">\n          </td>\n        </tr>\n      </table>\n    </div>\n    <button ng-click=\"move(+1, $event)\" class=\"angular-date-range-picker__next-month\">&#9654;</button>\n  </div>\n  <div class=\"angular-date-range-picker__panel\">\n    <div>\n      Select range: <select ng-click=\"prevent_select($event)\" ng-model=\"quick\" ng-options=\"e.range as e.label for e in quickList\"></select>\n    </div>\n    <div class=\"angular-date-range-picker__buttons\">\n      <button ng-click=\"ok($event)\" class=\"angular-date-range-picker__apply\">Apply</button>\n      <a ng-click=\"hide($event)\" class=\"angular-date-range-picker__cancel\">cancel</a>\n    </div>\n  </div>\n</div>";
       oneDayRange = moment().range("2013-01-01", "2013-01-02");
       return {
         restrict: "AE",
@@ -14,20 +14,23 @@
           model: "=ngModel"
         },
         link: function($scope, element, attrs) {
-          var domEl, _calculateRange, _prepare;
+          var domEl, _calculateRange, _checkQuickList, _prepare;
           $scope.quickList = [
             {
               label: "This week",
               range: moment().range(moment().startOf("week"), moment().endOf("week"))
             }, {
               label: "Next week",
-              range: moment().range(moment().startOf("week").add(1, "week"), moment().endOf("week").add(1, "week"))
+              range: moment().range(moment().startOf("week").add(1, "week"), moment().add(1, "week").endOf("week"))
+            }, {
+              label: "This fortnight",
+              range: moment().range(moment().startOf("week"), moment().add(1, "week").endOf("week"))
             }, {
               label: "This month",
               range: moment().range(moment().startOf("month"), moment().endOf("month"))
             }, {
               label: "Next month",
-              range: moment().range(moment().startOf("month").add(1, "month"), moment().endOf("month").add(1, "month"))
+              range: moment().range(moment().startOf("month").add(1, "month"), moment().add(1, "month").endOf("month"))
             }
           ];
           $scope.quick = null;
@@ -39,15 +42,34 @@
             var end, start;
             return $scope.range = $scope.selection ? (start = $scope.selection.start.clone().startOf("month").startOf("day"), end = start.clone().add(2, "months").endOf("month").startOf("day"), moment().range(start, end)) : moment().range(moment().startOf("month").subtract(1, "month").startOf("day"), moment().endOf("month").add(1, "month").startOf("day"));
           };
+          _checkQuickList = function() {
+            var e, _i, _len, _ref;
+            if (!$scope.selection) {
+              return;
+            }
+            _ref = $scope.quickList;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              e = _ref[_i];
+              if ($scope.selection.start.startOf("day").unix() === e.range.start.startOf("day").unix() && $scope.selection.end.startOf("day").unix() === e.range.end.startOf("day").unix()) {
+                $scope.quick = e.range;
+                return;
+              }
+            }
+            return $scope.quick = null;
+          };
           _prepare = function() {
-            var m, startIndex, _i, _len, _ref, _results;
+            var m, startDay, startIndex, _i, _len, _ref;
             $scope.months = [];
             startIndex = $scope.range.start.year() * 12 + $scope.range.start.month();
+            startDay = moment().startOf("week").day();
             $scope.range.by(oneDayRange, function(date) {
               var d, dis, m, sel, w, _base, _base1;
+              d = date.day() - startDay;
+              if (d < 0) {
+                d = 7 + d;
+              }
               m = date.year() * 12 + date.month() - startIndex;
-              w = parseInt((7 + date.date() - date.day()) / 7);
-              d = date.day();
+              w = parseInt((7 + date.date() - d) / 7);
               sel = false;
               dis = false;
               if ($scope.start) {
@@ -64,20 +86,18 @@
               return $scope.months[m].weeks[w][d] = {
                 date: date,
                 selected: sel,
-                disabled: dis
+                disabled: dis,
+                start: $scope.start && $scope.start.unix() === date.unix()
               };
             });
             _ref = $scope.months;
-            _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               m = _ref[_i];
               if (!m.weeks[0]) {
-                _results.push(m.weeks.splice(0, 1));
-              } else {
-                _results.push(void 0);
+                m.weeks.splice(0, 1);
               }
             }
-            return _results;
+            return _checkQuickList();
           };
           $scope.show = function() {
             $scope.selection = $scope.model;
@@ -132,6 +152,9 @@
             }
             $scope.range = moment().range($scope.range.start.add(n, 'months').startOf("month").startOf("day"), $scope.range.start.clone().add(2, "months").endOf("month").startOf("day"));
             return _prepare();
+          };
+          $scope.handlePickerClick = function($event) {
+            return $event != null ? typeof $event.stopPropagation === "function" ? $event.stopPropagation() : void 0 : void 0;
           };
           $scope.$watch("quick", function(q, o) {
             if (!q) {

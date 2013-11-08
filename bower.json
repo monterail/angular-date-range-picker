@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "angular": "~1.0",
+    "angular-bindonce": "*",
     "moment": "~2.1.0",
     "moment-range": "~0.1.6"
   },
