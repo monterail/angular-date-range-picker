@@ -1,10 +1,16 @@
 # Pure Angular Datepicker, without jQuery
 
+## Install
+
+```
+bower install angular-date-range-picker
+```
+
 ```js
 angular.module('myApp', ['dateRangePicker']);
 // ...
 
-$scope.dates = [start, end]
+$scope.range = moment().range("2012-11-05", "2013-01-25")
 ```
 
 
