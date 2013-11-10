@@ -10,7 +10,7 @@ bower install angular-date-range-picker
 angular.module('myApp', ['dateRangePicker']);
 // ...
 
-$scope.range = moment().range("2012-11-05", "2013-01-25")
+$scope.dates = moment().range("2012-11-05", "2013-01-25")
 ```
 
 
