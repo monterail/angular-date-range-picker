@@ -6,17 +6,45 @@
 bower install angular-date-range-picker
 ```
 
-```js
-angular.module('myApp', ['dateRangePicker']);
-// ...
+**NOTE**: Since [bindonce](https://github.com/Pasvaz/bindonce) hasn't yet been [released for angular 1.2](https://github.com/Pasvaz/bindonce/issues/31) bower will ask you to select angular version - please choose `1.2.x`.
 
+## Usage
+
+```js
+// require dateRangePicker module as dependency
+angular.module('myApp', ['dateRangePicker']);
+```
+
+```js
+// specify default date range in controller
 $scope.dates = moment().range("2012-11-05", "2013-01-25")
 ```
 
-
 ```html
+<!-- use 'date-range-picker' directive in view -->
 <input type="text" date-range-picker ng-model="dates"/>
 ```
+
+## Angular version compatibility table
+
+Due to usage of `track by $index` it is impossible to provide one version for both angular `< 1.2` and `>= 1.2`.
+
+<table>
+  <tr>
+    <th>Angular version</th>
+    <th>date-range-picker version</th>
+  </tr>
+  <tr>
+    <td>1.2.x</td><td>0.3.x</td>
+  </tr>
+  <tr>
+    <td>1.1.x</td><td>0.2.x</td>
+  </tr>
+  <tr>
+    <td>1.0.x</td><td>0.2.x</td>
+  </tr>
+</table>
+
 
 
 
