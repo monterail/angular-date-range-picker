@@ -1,6 +1,7 @@
 {
   "name": "angular-date-range-picker demo page",
   "dependencies": {
-    "angular-date-range-picker": "0.3.0"
+    "angular-date-range-picker": "0.3.0",
+    "prismjs": "*"
   }
 }

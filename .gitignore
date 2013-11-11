@@ -15,9 +15,12 @@
 /bower_components/moment/*
 !/bower_components/moment/moment.js
 
+/bower_components/prismjs/*
+!/bower_components/prismjs/prism.js
+!/bower_components/prismjs/prism.css
+
 /bower_components/angular-date-range-picker/*
 !/bower_components/angular-date-range-picker/build
 /bower_components/angular-date-range-picker/build/*
 !/bower_components/angular-date-range-picker/build/angular-date-range-picker.js
 !/bower_components/angular-date-range-picker/build/angular-date-range-picker.css
-

@@ -19,19 +19,36 @@
     })
   </script>
   <style type="text/css">
-    * {
-      font-size: 10px;
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
       font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;;
     }
+    .main {
+      width: 600px;
+      margin: auto;
+    }
   </style>
+
+  <link rel="stylesheet" type="text/css" href="bower_components/prismjs/prism.css"/>
 </head>
 <body ng-app="testapp">
-  <div ng-controller="TestCtrl">
+  <div class="main" ng-controller="TestCtrl">
+    <h1>angular date range picker</h1>
+    <a href="https://github.com/monterail/angular-date-range-picker">GitHub</a>
+    <h2>Basic usage</h3>
+    <pre><code class="language-javascript">angular.module("testapp", ["dateRangePicker"])</code></pre>
+
+    <pre><code class="language-javascript">angular.module("testapp").controller("TestCtrl", function($scope){
+  $scope.range = moment().range("2012-11-05", "2013-01-25")
+}</code></pre>
+
+    <pre><code class="language-markup">&lt;date-range-picker ng-model="range"&gt;&lt;/date-range-picker&gt;</code></pre>
+
     <date-range-picker ng-model="range"></date-range-picker>
-    <pre>{{ range.start.toDate() }} - {{ range.end.toDate() }}</pre>
-    <date-range-picker ng-model="range2"></date-range-picker>
-    <button ng-click="change()">Change</button>
-    <pre>{{ range2.start.toDate() }} - {{ range2.end.toDate() }}</pre>
   </div>
+
+  <script type="text/javascript" src="bower_components/prismjs/prism.js"></script>
 </body>
 </html>
