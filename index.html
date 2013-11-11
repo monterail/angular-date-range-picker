@@ -2,11 +2,12 @@
 <html>
 <head>
   <title>Test</title>
-  <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
-  <script type="text/javascript" src="../bower_components/angular-bindonce/bindonce.js"></script>
-  <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
-  <script type="text/javascript" src="../bower_components/moment-range/lib/moment-range.js"></script>
-  <script type="text/javascript" src="../build/angular-date-range-picker.js"></script>
+  <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="bower_components/angular-bindonce/bindonce.js"></script>
+  <script type="text/javascript" src="bower_components/moment/moment.js"></script>
+  <script type="text/javascript" src="bower_components/moment-range/lib/moment-range.js"></script>
+  <script type="text/javascript" src="bower_components/angular-date-range-picker/build/angular-date-range-picker.js"></script>
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-date-range-picker/build/angular-date-range-picker.css"/>
   <script type="text/javascript">
     angular.module("testapp", ["dateRangePicker"])
     angular.module("testapp").controller("TestCtrl", function($scope){
@@ -17,7 +18,6 @@
       }
     })
   </script>
-  <link rel="stylesheet" type="text/css" href="../build/angular-date-range-picker.css"/>
   <style type="text/css">
     * {
       font-size: 10px;
@@ -31,6 +31,7 @@
     <pre>{{ range.start.toDate() }} - {{ range.end.toDate() }}</pre>
     <date-range-picker ng-model="range2"></date-range-picker>
     <button ng-click="change()">Change</button>
+    <pre>{{ range2.start.toDate() }} - {{ range2.end.toDate() }}</pre>
   </div>
 </body>
 </html>
