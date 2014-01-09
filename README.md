@@ -6,7 +6,6 @@
 bower install angular-date-range-picker
 ```
 
-**NOTE**: Since [bindonce](https://github.com/Pasvaz/bindonce) hasn't yet been [released for angular 1.2](https://github.com/Pasvaz/bindonce/issues/31) bower will ask you to select angular version - please choose `1.2.x`.
 
 ## Usage
 
