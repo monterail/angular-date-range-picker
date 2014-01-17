@@ -226,6 +226,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
 
     angular.element(document).bind "click", (e) ->
       $scope.$apply -> $scope.hide()
+      true
 
     _makeQuickList()
     _calculateRange()
