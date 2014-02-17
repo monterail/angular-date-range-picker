@@ -206,7 +206,7 @@
             });
           });
           documentClickFn = function(e) {
-            $scop.$apply(function() {
+            $scope.$apply(function() {
               return $scope.hide();
             });
             return true;
