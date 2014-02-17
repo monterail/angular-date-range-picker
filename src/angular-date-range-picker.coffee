@@ -224,7 +224,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
         if $scope.visible then $scope.hide() else $scope.show()
 
     documentClickFn = (e) ->
-      $scop.$apply -> $scope.hide()
+      $scope.$apply -> $scope.hide()
       true
 
     angular.element(document).bind "click", documentClickFn
