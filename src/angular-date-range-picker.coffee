@@ -223,10 +223,14 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       $scope.$apply ->
         if $scope.visible then $scope.hide() else $scope.show()
 
-
-    angular.element(document).bind "click", (e) ->
-      $scope.$apply -> $scope.hide()
+    documentClickFn = (e) ->
+      $scop.$apply -> $scope.hide()
       true
+
+    angular.element(document).bind "click", documentClickFn
+
+    $scope.$on '$destroy', ->
+      angular.element(document).unbind 'click', documentClickFn
 
     _makeQuickList()
     _calculateRange()
