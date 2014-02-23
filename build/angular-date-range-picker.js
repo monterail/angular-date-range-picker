@@ -15,7 +15,7 @@
           model: "=ngModel"
         },
         link: function($scope, element, attrs) {
-          var domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
+          var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
           $scope.quickListDefinitions = [
             {
               label: "This week",
@@ -205,10 +205,15 @@
               }
             });
           });
-          angular.element(document).bind("click", function(e) {
-            return $scope.$apply(function() {
+          documentClickFn = function(e) {
+            $scope.$apply(function() {
               return $scope.hide();
             });
+            return true;
+          };
+          angular.element(document).bind("click", documentClickFn);
+          $scope.$on('$destroy', function() {
+            return angular.element(document).unbind('click', documentClickFn);
           });
           _makeQuickList();
           _calculateRange();
