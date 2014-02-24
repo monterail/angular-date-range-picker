@@ -52,9 +52,11 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
   """
   scope:
     model: "=ngModel" # can't use ngModelController, we need isolated scope
+    customSelectOptions: "="
 
   link: ($scope, element, attrs) ->
-    $scope.quickListDefinitions = [
+    $scope.quickListDefinitions = $scope.customSelectOptions
+    $scope.quickListDefinitions ?= [
       {
         label: "This week",
         range: moment().range(
