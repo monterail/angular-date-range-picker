@@ -39,7 +39,6 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     </div>
   </div>
   """
-  oneDayRange = moment().range("2013-01-01", "2013-01-02")
   CUSTOM = "CUSTOM"
 
   restrict: "AE"
@@ -132,7 +131,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       startIndex = $scope.range.start.year()*12 + $scope.range.start.month()
       startDay = moment().startOf("week").day()
 
-      $scope.range.by oneDayRange, (date) ->
+      $scope.range.by "days", (date) ->
         d = date.day() - startDay
         d = 7+d if d < 0 # (d == -1 fix for sunday)
         m = date.year()*12 + date.month() - startIndex
