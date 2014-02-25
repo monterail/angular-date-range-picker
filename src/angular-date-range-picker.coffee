@@ -216,6 +216,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       _calculateRange()
       _prepare()
 
+    $scope.$watch "customSelectOptions", (value) ->
+      $scope.quickListDefinitions = value
+
     # create DOM and bind event
     domEl = $compile(angular.element(pickerTemplate))($scope)
     element.append(domEl)

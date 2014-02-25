@@ -36,7 +36,7 @@ $scope.rangeSelectOptions = [
       moment().startOf("year").startOf("day"),
       moment().endOf("year").startOf("day")
     )
-  }
+  },
   {
     label: "Last year",
     range: moment().range(
