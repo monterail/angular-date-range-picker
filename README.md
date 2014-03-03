@@ -24,6 +24,34 @@ $scope.dates = moment().range("2012-11-05", "2013-01-25")
 <input type="text" date-range-picker ng-model="dates"/>
 ```
 
+## Customizations
+
+### Select range options
+
+```js
+$scope.rangeSelectOptions = [
+  {
+    label: "This year",
+    range: moment().range(
+      moment().startOf("year").startOf("day"),
+      moment().endOf("year").startOf("day")
+    )
+  },
+  {
+    label: "Last year",
+    range: moment().range(
+      moment().startOf("year").add(-1, "year").startOf("day"),
+      moment().add(-1, "year").endOf("year").startOf("day")
+    )
+  }
+]
+
+```
+
+```html
+<input type="text" date-range-picker ng-model="dates" custom-select-options="rangeSelectOptions" />
+```
+
 ## Angular version compatibility table
 
 Due to usage of `track by $index` it is impossible to provide one version for both angular `< 1.2` and `>= 1.2`.
