@@ -172,6 +172,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.hide = ($event) ->
       $event?.stopPropagation?()
       $scope.visible = false
+      $scope.start = null
 
     $scope.prevent_select = ($event) ->
       $event?.stopPropagation?()
