@@ -137,7 +137,8 @@
                 $event.stopPropagation();
               }
             }
-            return $scope.visible = false;
+            $scope.visible = false;
+            return $scope.start = null;
           };
           $scope.prevent_select = function($event) {
             return $event != null ? typeof $event.stopPropagation === "function" ? $event.stopPropagation() : void 0 : void 0;
