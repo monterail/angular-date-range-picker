@@ -252,6 +252,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       _prepare()
 
     $scope.$watch "customSelectOptions", (value) ->
+      return unless customSelectOptions?
       $scope.quickListDefinitions = value
 
     # create DOM and bind event

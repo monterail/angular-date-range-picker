@@ -221,6 +221,9 @@
             return _prepare();
           });
           $scope.$watch("customSelectOptions", function(value) {
+            if (typeof customSelectOptions === "undefined" || customSelectOptions === null) {
+              return;
+            }
             return $scope.quickListDefinitions = value;
           });
           domEl = $compile(angular.element(pickerTemplate))($scope);
