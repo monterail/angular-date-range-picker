@@ -31,7 +31,7 @@
   <div ng-controller="TestCtrl">
     <div>
       <h1>Date range picker</h1>
-      <date-range-picker ng-model="range" ranged="true"></date-range-picker>
+      <date-range-picker ng-model="range"></date-range-picker>
       <pre>{{ range.start.toDate() }} - {{ range.end.toDate() }}</pre>
       <date-range-picker ng-model="range2" ranged="true"></date-range-picker>
       <button ng-click="change()">Change</button>
