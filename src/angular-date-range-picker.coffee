@@ -34,7 +34,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       <div ng-show="showRanged">
         Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
       </div>
-      <div class="angular-date-range-picker--buttons">
+      <div class="angular-date-range-picker__buttons">
         <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
         <a ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
       </div>
