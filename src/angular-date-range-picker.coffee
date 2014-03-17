@@ -3,7 +3,9 @@ angular.module "dateRangePicker", ['pasvaz.bindonce']
 angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
   # constants
   pickerTemplate = """
-  <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)">
+  <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class='{
+                  "angular-date-range-picker--ranged": ranged,
+                }'>
     <div class="angular-date-range-picker__timesheet">
       <button ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</button>
       <div bindonce ng-repeat="month in months" class="angular-date-range-picker__month">
@@ -29,10 +31,10 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       <button ng-click="move(+1, $event)" class="angular-date-range-picker__next-month">&#9654;</button>
     </div>
     <div class="angular-date-range-picker__panel">
-      <div>
+      <div ng-show="ranged">
         Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
       </div>
-      <div class="angular-date-range-picker__buttons">
+      <div class="angular-date-range-picker--buttons">
         <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
         <a ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
       </div>
@@ -45,13 +47,20 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
   replace: true
   template: """
   <span class="angular-date-range-picker__input">
-    <span ng-show="model">{{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>
-    <span ng-hide="model">Select date range</span>
+    <span ng-if="ranged">
+      <span ng-show="model">{{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>
+      <span ng-hide="model">Select date range</span>
+    </span>
+    <span ng-if="!ranged">
+      <span ng-show="model">{{ model.format("ll") }}</span>
+      <span ng-hide="model">Select date</span>
+    </span>
   </span>
   """
   scope:
     model: "=ngModel" # can't use ngModelController, we need isolated scope
     customSelectOptions: "="
+    ranged: "="
 
   link: ($scope, element, attrs) ->
     $scope.quickListDefinitions = $scope.customSelectOptions
@@ -99,23 +108,35 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.start = null
 
     _makeQuickList = (includeCustom = false) ->
+      return unless $scope.ranged
       $scope.quickList = []
       $scope.quickList.push(label: "Custom", range: CUSTOM) if includeCustom
       for e in $scope.quickListDefinitions
         $scope.quickList.push(e)
 
     _calculateRange = () ->
-      $scope.range = if $scope.selection
-        start = $scope.selection.start.clone().startOf("month").startOf("day")
-        end = start.clone().add(2, "months").endOf("month").startOf("day")
-        moment().range(start, end)
+      $scope.ranged = !$scope.ranged? || $scope.ranged
+      if $scope.ranged
+        $scope.range = if $scope.selection
+          start = $scope.selection.start.clone().startOf("month").startOf("day")
+          end = start.clone().add(2, "months").endOf("month").startOf("day")
+          moment().range(start, end)
+        else
+          moment().range(
+            moment().startOf("month").subtract(1, "month").startOf("day"),
+            moment().endOf("month").add(1, "month").startOf("day")
+          )
       else
-        moment().range(
-          moment().startOf("month").subtract(1, "month").startOf("day"),
-          moment().endOf("month").add(1, "month").startOf("day")
+        $scope.selection = false
+        $scope.selection = $scope.model || false
+        $scope.date = $scope.model || moment()
+        $scope.range = moment().range(
+          moment($scope.date).startOf("month"),
+          moment($scope.date).endOf("month")
         )
 
     _checkQuickList = () ->
+      return unless $scope.ranged
       return unless $scope.selection
       for e in $scope.quickList
         if e.range != CUSTOM and $scope.selection.start.startOf("day").unix() == e.range.start.startOf("day").unix() and
@@ -142,11 +163,14 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
         sel = false
         dis = false
 
-        if $scope.start
-          sel = date == $scope.start
-          dis = date < $scope.start
+        if $scope.ranged
+          if $scope.start
+            sel = date == $scope.start
+            dis = date < $scope.start
+          else
+            sel = $scope.selection && $scope.selection.contains(date)
         else
-          sel = $scope.selection && $scope.selection.contains(date)
+          sel = date.isSame($scope.selection)
 
         $scope.months[m] ||= {name: date.format("MMMM YYYY"), weeks: []}
         $scope.months[m].weeks[w] ||= []
@@ -187,22 +211,33 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       $event?.stopPropagation?()
       return if day.disabled
 
-      $scope.selecting = !$scope.selecting
+      if $scope.ranged
+        $scope.selecting = !$scope.selecting
 
-      if $scope.selecting
-        $scope.start = day.date
-        _prepare()
+        if $scope.selecting
+          $scope.start = day.date
+        else
+          $scope.selection = moment().range($scope.start, day.date)
+          $scope.start = null
       else
-        $scope.selection = moment().range($scope.start, day.date)
-        $scope.start = null
-        _prepare()
+        $scope.selection = day.date
+
+      _prepare()
 
     $scope.move = (n, $event) ->
       $event?.stopPropagation?()
-      $scope.range = moment().range(
-        $scope.range.start.add(n, 'months').startOf("month").startOf("day"),
-        $scope.range.start.clone().add(2, "months").endOf("month").startOf("day")
-      )
+      if $scope.ranged
+        $scope.range = moment().range(
+          $scope.range.start.add(n, 'months').startOf("month").startOf("day"),
+          $scope.range.start.clone().add(2, "months").endOf("month").startOf("day")
+        )
+      else
+        $scope.date = moment().month($scope.date.month() + n)
+        $scope.range = moment().range(
+          moment($scope.date).startOf("month"),
+          moment($scope.date).endOf("month")
+        )
+
       _prepare()
 
     $scope.handlePickerClick = ($event) ->

@@ -94,14 +94,18 @@
     position: absolute;
     top: 30px;
     left: -1px;
-    width: 700px;
     overflow: hidden;
-    height: 183px;
     background: #fff;
     z-index: 1000;
     border: 1px solid #ccc;
     box-sizing: content-box;
 }
+
+.angular-date-range-picker--ranged {
+    width: 700px;
+    height: 183px;
+}
+
 .angular-date-range-picker__calendar-day:hover {
     background: #000;
     color: #fff;
@@ -130,8 +134,10 @@
     color: #000;
     cursor: pointer;
 }
-.angular-date-range-picker__buttons {
+.angular-date-range-picker--ranged .angular-date-range-picker__buttons {
     position: absolute;
+}
+.angular-date-range-picker__buttons {
     bottom: 10px;
 }
 .angular-date-range-picker__apply:hover {
