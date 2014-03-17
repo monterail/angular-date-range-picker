@@ -43,7 +43,7 @@
           $scope.selecting = false;
           $scope.visible = false;
           $scope.start = null;
-          $scope.showRanged = $scope.ranged == null ? true : $scope.ranged;
+          $scope.showRanged = $scope.ranged === void 0 ? true : $scope.ranged;
           _makeQuickList = function(includeCustom) {
             var e, _i, _len, _ref, _results;
             if (includeCustom == null) {

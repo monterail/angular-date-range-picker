@@ -106,7 +106,8 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.selecting = false
     $scope.visible = false
     $scope.start = null
-    $scope.showRanged = if !$scope.ranged? then true else $scope.ranged
+    # Backward compatibility - if $scope.ranged is not set in the html, it displays normal date range picker.
+    $scope.showRanged = if $scope.ranged == undefined then true else $scope.ranged
 
     _makeQuickList = (includeCustom = false) ->
       return unless $scope.showRanged
