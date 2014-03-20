@@ -26,6 +26,15 @@ $scope.dates = moment().range("2012-11-05", "2013-01-25")
 
 ## Customizations
 
+### Simple date picker
+
+You can also select only one date:
+
+```html
+<!-- use 'date-range-picker' directive in view -->
+<input type="text" date-range-picker ranged="false"/>
+```
+
 ### Select range options
 
 ```js
