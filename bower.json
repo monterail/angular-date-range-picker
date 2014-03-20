@@ -1,6 +1,6 @@
 {
   "name": "angular-date-range-picker",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "authors": [
     "Tymon Tobolski <tymon.tobolski@monterail.com>",
     "Krzysztof Jung <krzysztof.jung@monterail.com>"
@@ -14,8 +14,8 @@
   "dependencies": {
     "angular": "~1.2",
     "angular-bindonce": "*",
-    "moment": "~2.1.0",
-    "moment-range": "~0.1.6"
+    "moment": "~2.5.1",
+    "moment-range": "~1.0.1"
   },
   "license": "MIT",
   "homepage": "http://github.com/monterail/angular-date-range-picker"
