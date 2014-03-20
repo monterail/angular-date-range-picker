@@ -3,9 +3,7 @@ angular.module "dateRangePicker", ['pasvaz.bindonce']
 angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
   # constants
   pickerTemplate = """
-  <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class='{
-                  "angular-date-range-picker--ranged": showRanged,
-                }'>
+  <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class="{'angular-date-range-picker--ranged': showRanged }">
     <div class="angular-date-range-picker__timesheet">
       <button ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</button>
       <div bindonce ng-repeat="month in months" class="angular-date-range-picker__month">
