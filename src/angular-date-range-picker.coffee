@@ -5,7 +5,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
   pickerTemplate = """
   <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class="{'angular-date-range-picker--ranged': showRanged }">
     <div class="angular-date-range-picker__timesheet">
-      <button ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</button>
+      <a ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</a>
       <div bindonce ng-repeat="month in months" class="angular-date-range-picker__month">
         <div class="angular-date-range-picker__month-name" bo-text="month.name"></div>
         <table class="angular-date-range-picker__calendar">
@@ -26,14 +26,14 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           </tr>
         </table>
       </div>
-      <button ng-click="move(+1, $event)" class="angular-date-range-picker__next-month">&#9654;</button>
+      <a ng-click="move(+1, $event)" class="angular-date-range-picker__next-month">&#9654;</a>
     </div>
     <div class="angular-date-range-picker__panel">
       <div ng-show="showRanged">
         Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
       </div>
       <div class="angular-date-range-picker__buttons">
-        <button ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</button>
+        <a ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</a>
         <a ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
       </div>
     </div>
