@@ -59,6 +59,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     model: "=ngModel" # can't use ngModelController, we need isolated scope
     customSelectOptions: "="
     ranged: "="
+    pastDates: "@"
 
   link: ($scope, element, attrs) ->
     $scope.quickListDefinitions = $scope.customSelectOptions
@@ -170,6 +171,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
             sel = $scope.selection && $scope.selection.contains(date)
         else
           sel = date.isSame($scope.selection)
+          dis = date <= moment() if $scope.pastDates
 
         $scope.months[m] ||= {name: date.format("MMMM YYYY"), weeks: []}
         $scope.months[m].weeks[w] ||= []

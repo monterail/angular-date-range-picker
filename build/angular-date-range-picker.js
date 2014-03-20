@@ -13,7 +13,8 @@
         scope: {
           model: "=ngModel",
           customSelectOptions: "=",
-          ranged: "="
+          ranged: "=",
+          pastDates: "@"
         },
         link: function($scope, element, attrs) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
@@ -122,6 +123,9 @@
                 }
               } else {
                 sel = date.isSame($scope.selection);
+                if ($scope.pastDates) {
+                  dis = date <= moment();
+                }
               }
               (_base = $scope.months)[m] || (_base[m] = {
                 name: date.format("MMMM YYYY"),
