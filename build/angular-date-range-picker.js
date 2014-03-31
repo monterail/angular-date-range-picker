@@ -124,7 +124,7 @@
               } else {
                 sel = date.isSame($scope.selection);
                 if ($scope.pastDates) {
-                  dis = date <= moment();
+                  dis = moment().diff(date, 'days') > 0;
                 }
               }
               (_base = $scope.months)[m] || (_base[m] = {
