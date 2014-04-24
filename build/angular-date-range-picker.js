@@ -206,7 +206,7 @@
             if ($scope.showRanged) {
               $scope.range = moment().range($scope.range.start.add(n, 'months').startOf("month").startOf("day"), $scope.range.start.clone().add(2, "months").endOf("month").startOf("day"));
             } else {
-              $scope.date = moment().month($scope.date.month() + n);
+              $scope.date.add(n, 'months');
               $scope.range = moment().range(moment($scope.date).startOf("month"), moment($scope.date).endOf("month"));
             }
             return _prepare();

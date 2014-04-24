@@ -234,7 +234,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           $scope.range.start.clone().add(2, "months").endOf("month").startOf("day")
         )
       else
-        $scope.date = moment().month($scope.date.month() + n)
+        $scope.date.add(n, 'months')
         $scope.range = moment().range(
           moment($scope.date).startOf("month"),
           moment($scope.date).endOf("month")
