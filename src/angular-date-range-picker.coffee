@@ -44,6 +44,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
 
   restrict: "AE"
   replace: true
+  require: "?^form"
   template: """
   <span tabindex="0" ng-keydown="hide()" class="angular-date-range-picker__input">
     <span ng-if="showRanged">
@@ -62,7 +63,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     ranged: "="
     pastDates: "@"
 
-  link: ($scope, element, attrs) ->
+  link: ($scope, element, attrs, formController) ->
     $scope.quickListDefinitions = $scope.customSelectOptions
     $scope.quickListDefinitions ?= [
       {
@@ -208,6 +209,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       $event?.stopPropagation?()
       $scope.model = $scope.selection
       $scope.hide()
+      formController?.$setDirty()
 
     $scope.select = (day, $event) ->
       $event?.stopPropagation?()

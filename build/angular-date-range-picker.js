@@ -9,6 +9,7 @@
       return {
         restrict: "AE",
         replace: true,
+        require: "?^form",
         template: "<span tabindex=\"0\" ng-keydown=\"hide()\" class=\"angular-date-range-picker__input\">\n  <span ng-if=\"showRanged\">\n    <span ng-show=\"!!model\">{{ model.start.format(\"ll\") }} - {{ model.end.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date range</span>\n  </span>\n  <span ng-if=\"!showRanged\">\n    <span ng-show=\"!!model\">{{ model.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date</span>\n  </span>\n</span>",
         scope: {
           model: "=ngModel",
@@ -16,7 +17,7 @@
           ranged: "=",
           pastDates: "@"
         },
-        link: function($scope, element, attrs) {
+        link: function($scope, element, attrs, formController) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
           $scope.quickListDefinitions = $scope.customSelectOptions;
           if ($scope.quickListDefinitions == null) {
@@ -173,7 +174,8 @@
               }
             }
             $scope.model = $scope.selection;
-            return $scope.hide();
+            $scope.hide();
+            return formController != null ? formController.$setDirty() : void 0;
           };
           $scope.select = function(day, $event) {
             if ($event != null) {

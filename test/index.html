@@ -28,7 +28,8 @@
   </style>
 </head>
 <body ng-app="testapp">
-  <div ng-controller="TestCtrl">
+	<div ng-controller="TestCtrl">
+	<form name="testForm">
     <div>
       <h1>Date range picker</h1>
       <date-range-picker ng-model="range"></date-range-picker>
@@ -39,7 +40,8 @@
     <div>
       <h1>Simple date picker</h1>
       <date-range-picker ng-model="date" ranged="false"></date-range-picker>
-    </div>
+  </div>
+  </form>
   </div>
 </body>
 </html>
