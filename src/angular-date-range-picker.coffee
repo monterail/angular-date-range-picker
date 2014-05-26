@@ -61,6 +61,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     customSelectOptions: "="
     ranged: "="
     pastDates: "@"
+    callback: "&"
 
   link: ($scope, element, attrs) ->
     $scope.quickListDefinitions = $scope.customSelectOptions
@@ -207,6 +208,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
       $scope.model = $scope.selection
+      $scope.callback() if $scope.callback
       $scope.hide()
 
     $scope.select = (day, $event) ->
