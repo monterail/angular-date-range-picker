@@ -1,6 +1,6 @@
 angular.module "dateRangePicker", ['pasvaz.bindonce']
 
-angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
+angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$timeout", ($compile, $timeout) ->
   # constants
   pickerTemplate = """
   <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class="{'angular-date-range-picker--ranged': showRanged }">
@@ -208,7 +208,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
       $scope.model = $scope.selection
-      $scope.callback() if $scope.callback
+      $timeout -> $scope.callback() if $scope.callback
       $scope.hide()
 
     $scope.select = (day, $event) ->
