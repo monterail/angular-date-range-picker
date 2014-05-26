@@ -14,7 +14,8 @@
           model: "=ngModel",
           customSelectOptions: "=",
           ranged: "=",
-          pastDates: "@"
+          pastDates: "@",
+          callback: "&"
         },
         link: function($scope, element, attrs) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
@@ -173,6 +174,9 @@
               }
             }
             $scope.model = $scope.selection;
+            if ($scope.callback) {
+              $scope.callback();
+            }
             return $scope.hide();
           };
           $scope.select = function(day, $event) {
