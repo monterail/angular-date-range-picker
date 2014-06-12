@@ -13,6 +13,7 @@
         template: "<span tabindex=\"0\" ng-keydown=\"hide()\" class=\"angular-date-range-picker__input\">\n  <span ng-if=\"showRanged\">\n    <span ng-show=\"!!model\">{{ model.start.format(\"ll\") }} - {{ model.end.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date range</span>\n  </span>\n  <span ng-if=\"!showRanged\">\n    <span ng-show=\"!!model\">{{ model.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date</span>\n  </span>\n</span>",
         scope: {
           model: "=ngModel",
+          limitingRange: "=limitingRange",
           customSelectOptions: "=",
           ranged: "=",
           pastDates: "@"
@@ -127,6 +128,9 @@
                 if ($scope.pastDates) {
                   dis = date <= moment();
                 }
+              }
+              if ($scope.limitingRange && !date.contains($scope.limitingRange)) {
+                dis = true;
               }
               (_base = $scope.months)[m] || (_base[m] = {
                 name: date.format("MMMM YYYY"),
