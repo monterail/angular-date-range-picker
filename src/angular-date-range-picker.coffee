@@ -176,7 +176,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           sel = date.isSame($scope.selection)
           dis = date <= moment() if $scope.pastDates
 
-        dis = true if $scope.limitingRange and not date.contains($scope.limitingRange)
+        dis = true if $scope.limitingRange and not $scope.limitingRange.contains(date)
 
         $scope.months[m] ||= {name: date.format("MMMM YYYY"), weeks: []}
         $scope.months[m].weeks[w] ||= []

@@ -129,7 +129,7 @@
                   dis = date <= moment();
                 }
               }
-              if ($scope.limitingRange && !date.contains($scope.limitingRange)) {
+              if ($scope.limitingRange && !$scope.limitingRange.contains(date)) {
                 dis = true;
               }
               (_base = $scope.months)[m] || (_base[m] = {
