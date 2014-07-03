@@ -76,7 +76,7 @@
             } else {
               $scope.selection = false;
               $scope.selection = $scope.model || false;
-              $scope.date = $scope.model || moment();
+              $scope.date = moment($scope.model) || moment();
               return $scope.range = moment().range(moment($scope.date).startOf("month"), moment($scope.date).endOf("month"));
             }
           };
