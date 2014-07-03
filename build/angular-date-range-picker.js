@@ -199,7 +199,7 @@
                 $scope.start = null;
               }
             } else {
-              $scope.selection = day.date;
+              $scope.selection = moment(day.date);
             }
             return _prepare();
           };

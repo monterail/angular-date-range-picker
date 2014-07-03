@@ -224,7 +224,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
           $scope.selection = moment().range($scope.start, day.date)
           $scope.start = null
       else
-        $scope.selection = day.date
+        $scope.selection = moment(day.date)
 
       _prepare()
 
