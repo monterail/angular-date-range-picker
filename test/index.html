@@ -22,6 +22,11 @@
 
       $scope.date = null
     })
+    angular.module("testapp").run(function($templateCache){
+      $templateCache.put('custom_picker.html', '<div ng-show="visible" class="angular-date-range-picker__picker" ><strong>Greetings from custom picker template</strong></div>');
+      $templateCache.put('custom_input.html', '<span tabindex="0" ng-keydown="hide()" class="angular-date-range-picker__input">Custom picker {{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>');
+
+    });
   </script>
   <link rel="stylesheet" type="text/css" href="../build/angular-date-range-picker.css"/>
   <style type="text/css">
@@ -43,6 +48,19 @@
     <div>
       <h1>Simple date picker</h1>
       <date-range-picker ng-model="date" ranged="false"></date-range-picker>
+    </div>
+    <div>
+      <h1>Custom picker template</h1>
+      <date-range-picker ng-model="anotherDate" picker-template-url="'custom_picker.html'"></date-range-picker>
+    </div>
+
+    <div>
+      <h1>Custom input template</h1>
+      <date-range-picker ng-model="anotherDate" input-template-url="'custom_input.html'"></date-range-picker>
+    </div>
+    <div>
+      <h1>Custom input template and picker</h1>
+      <date-range-picker ng-model="anotherDate" input-template-url="'custom_input.html'" picker-template-url="'custom_picker.html'"></date-range-picker>
     </div>
   </div>
 </body>

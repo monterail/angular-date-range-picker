@@ -1,6 +1,7 @@
 angular.module "dateRangePicker", ['pasvaz.bindonce']
 
-angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$timeout", ($compile, $timeout) ->
+angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$timeout", '$http',  '$templateCache', '$q', ($compile, $timeout, $http, $templateCache, $q) ->
+
   # constants
   pickerTemplate = """
   <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class="{'angular-date-range-picker--ranged': showRanged }">
@@ -40,11 +41,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     </div>
   </div>
   """
-  CUSTOM = "CUSTOM"
-
-  restrict: "AE"
-  replace: true
-  template: """
+  inputTemplate = """
   <span tabindex="0" ng-keydown="hide()" class="angular-date-range-picker__input">
     <span ng-if="showRanged">
       <span ng-show="!!model">{{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>
@@ -56,14 +53,53 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     </span>
   </span>
   """
+  CUSTOM = "CUSTOM"
+
+  getTemplate = (templateUrl) ->
+    templateLoader = $q.defer()
+    if templateUrl
+      $http.get(templateUrl, {cache: $templateCache})
+        .success (response) ->
+          templateLoader.resolve(response)
+        .error (response) ->
+          templateLoader.reject(response)
+          new Error "Could not load angular-date-range-picker template, reason #{response}"
+    else
+      templateLoader.resolve(inputTemplate)
+
+    return templateLoader.promise
+
+  restrict: "AE"
+  replace: true
+
   scope:
     model: "=ngModel" # can't use ngModelController, we need isolated scope
     customSelectOptions: "="
     ranged: "="
     pastDates: "@"
     callback: "&"
+    pickerTemplateUrl: "="
+    inputTemplateUrl: "="
 
   link: ($scope, element, attrs) ->
+    getTemplate($scope.inputTemplateUrl).then (html) ->
+      newEl = $compile(html)($scope);
+      element.replaceWith(newEl);
+      element = angular.element(newEl)
+      # create DOM and bind event
+      if $scope.pickerTemplateUrl
+        domEl = $compile(angular.element('<div ng-include="\'' + $scope.pickerTemplateUrl + '\'"></div>'))($scope)
+      else
+        domEl = $compile(angular.element(pickerTemplate))($scope)
+
+      element.append(domEl)
+
+      # Any binding to element needs to be done here
+      element.bind "click", (e) ->
+        e?.stopPropagation?()
+        $scope.$apply ->
+          if $scope.visible then $scope.hide() else $scope.show()
+
     $scope.quickListDefinitions = $scope.customSelectOptions
     $scope.quickListDefinitions ?= [
       {
@@ -258,15 +294,6 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     $scope.$watch "customSelectOptions", (value) ->
       return unless customSelectOptions?
       $scope.quickListDefinitions = value
-
-    # create DOM and bind event
-    domEl = $compile(angular.element(pickerTemplate))($scope)
-    element.append(domEl)
-
-    element.bind "click", (e) ->
-      e?.stopPropagation?()
-      $scope.$apply ->
-        if $scope.visible then $scope.hide() else $scope.show()
 
     documentClickFn = (e) ->
       $scope.$apply -> $scope.hide()
