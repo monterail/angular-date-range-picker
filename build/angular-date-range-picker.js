@@ -2,23 +2,68 @@
   angular.module("dateRangePicker", ['pasvaz.bindonce']);
 
   angular.module("dateRangePicker").directive("dateRangePicker", [
-    "$compile", "$timeout", function($compile, $timeout) {
-      var CUSTOM, pickerTemplate;
+    "$compile", "$timeout", '$http', '$templateCache', '$q', function($compile, $timeout, $http, $templateCache, $q) {
+      var CUSTOM, getTemplate, inputTemplate, pickerTemplate;
       pickerTemplate = "<div ng-show=\"visible\" class=\"angular-date-range-picker__picker\" ng-click=\"handlePickerClick($event)\" ng-class=\"{'angular-date-range-picker--ranged': showRanged }\">\n  <div class=\"angular-date-range-picker__timesheet\">\n    <a ng-click=\"move(-1, $event)\" class=\"angular-date-range-picker__prev-month\">&#9664;</a>\n    <div bindonce ng-repeat=\"month in months\" class=\"angular-date-range-picker__month\">\n      <div class=\"angular-date-range-picker__month-name\" bo-text=\"month.name\"></div>\n      <table class=\"angular-date-range-picker__calendar\">\n        <tr>\n          <th bindonce ng-repeat=\"day in month.weeks[1]\" class=\"angular-date-range-picker__calendar-weekday\" bo-text=\"day.date.format('dd')\">\n          </th>\n        </tr>\n        <tr bindonce ng-repeat=\"week in month.weeks\">\n          <td\n              bo-class='{\n                \"angular-date-range-picker__calendar-day\": day,\n                \"angular-date-range-picker__calendar-day-selected\": day.selected,\n                \"angular-date-range-picker__calendar-day-disabled\": day.disabled,\n                \"angular-date-range-picker__calendar-day-start\": day.start\n              }'\n              ng-repeat=\"day in week track by $index\" ng-click=\"select(day, $event)\">\n              <div class=\"angular-date-range-picker__calendar-day-wrapper\" bo-text=\"day.date.date()\"></div>\n          </td>\n        </tr>\n      </table>\n    </div>\n    <a ng-click=\"move(+1, $event)\" class=\"angular-date-range-picker__next-month\">&#9654;</a>\n  </div>\n  <div class=\"angular-date-range-picker__panel\">\n    <div ng-show=\"showRanged\">\n      Select range: <select ng-click=\"prevent_select($event)\" ng-model=\"quick\" ng-options=\"e.range as e.label for e in quickList\"></select>\n    </div>\n    <div class=\"angular-date-range-picker__buttons\">\n      <a ng-click=\"ok($event)\" class=\"angular-date-range-picker__apply\">Apply</a>\n      <a ng-click=\"hide($event)\" class=\"angular-date-range-picker__cancel\">cancel</a>\n    </div>\n  </div>\n</div>";
+      inputTemplate = "<span tabindex=\"0\" ng-keydown=\"hide()\" class=\"angular-date-range-picker__input\">\n  <span ng-if=\"showRanged\">\n    <span ng-show=\"!!model\">{{ model.start.format(\"ll\") }} - {{ model.end.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date range</span>\n  </span>\n  <span ng-if=\"!showRanged\">\n    <span ng-show=\"!!model\">{{ model.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date</span>\n  </span>\n</span>";
       CUSTOM = "CUSTOM";
+      getTemplate = function(templateUrl) {
+        var templateLoader;
+        templateLoader = $q.defer();
+        if (templateUrl) {
+          $http.get(templateUrl, {
+            cache: $templateCache
+          }).success(function(response) {
+            return templateLoader.resolve(response);
+          }).error(function(response) {
+            templateLoader.reject(response);
+            return new Error("Could not load angular-date-range-picker template, reason " + response);
+          });
+        } else {
+          templateLoader.resolve(inputTemplate);
+        }
+        return templateLoader.promise;
+      };
       return {
         restrict: "AE",
         replace: true,
-        template: "<span tabindex=\"0\" ng-keydown=\"hide()\" class=\"angular-date-range-picker__input\">\n  <span ng-if=\"showRanged\">\n    <span ng-show=\"!!model\">{{ model.start.format(\"ll\") }} - {{ model.end.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date range</span>\n  </span>\n  <span ng-if=\"!showRanged\">\n    <span ng-show=\"!!model\">{{ model.format(\"ll\") }}</span>\n    <span ng-hide=\"!!model\">Select date</span>\n  </span>\n</span>",
         scope: {
           model: "=ngModel",
           customSelectOptions: "=",
           ranged: "=",
           pastDates: "@",
-          callback: "&"
+          callback: "&",
+          pickerTemplateUrl: "=",
+          inputTemplateUrl: "="
         },
         link: function($scope, element, attrs) {
-          var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
+          var documentClickFn, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
+          getTemplate($scope.inputTemplateUrl).then(function(html) {
+            var domEl, newEl;
+            newEl = $compile(html)($scope);
+            element.replaceWith(newEl);
+            element = angular.element(newEl);
+            if ($scope.pickerTemplateUrl) {
+              domEl = $compile(angular.element('<div ng-include="\'' + $scope.pickerTemplateUrl + '\'"></div>'))($scope);
+            } else {
+              domEl = $compile(angular.element(pickerTemplate))($scope);
+            }
+            element.append(domEl);
+            return element.bind("click", function(e) {
+              if (e != null) {
+                if (typeof e.stopPropagation === "function") {
+                  e.stopPropagation();
+                }
+              }
+              return $scope.$apply(function() {
+                if ($scope.visible) {
+                  return $scope.hide();
+                } else {
+                  return $scope.show();
+                }
+              });
+            });
+          });
           $scope.quickListDefinitions = $scope.customSelectOptions;
           if ($scope.quickListDefinitions == null) {
             $scope.quickListDefinitions = [
@@ -235,22 +280,6 @@
               return;
             }
             return $scope.quickListDefinitions = value;
-          });
-          domEl = $compile(angular.element(pickerTemplate))($scope);
-          element.append(domEl);
-          element.bind("click", function(e) {
-            if (e != null) {
-              if (typeof e.stopPropagation === "function") {
-                e.stopPropagation();
-              }
-            }
-            return $scope.$apply(function() {
-              if ($scope.visible) {
-                return $scope.hide();
-              } else {
-                return $scope.show();
-              }
-            });
           });
           documentClickFn = function(e) {
             $scope.$apply(function() {
