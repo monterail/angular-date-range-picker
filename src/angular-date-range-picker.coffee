@@ -1,4 +1,4 @@
-angular.module "dateRangePicker", ['pasvaz.bindonce']
+angular.module "dateRangePicker", []
 
 angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$timeout", ($compile, $timeout) ->
   # constants
@@ -6,23 +6,22 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
   <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class="{'angular-date-range-picker--ranged': showRanged }">
     <div class="angular-date-range-picker__timesheet">
       <a ng-click="move(-1, $event)" class="angular-date-range-picker__prev-month">&#9664;</a>
-      <div bindonce ng-repeat="month in months" class="angular-date-range-picker__month">
-        <div class="angular-date-range-picker__month-name" bo-text="month.name"></div>
+      <div ng-repeat="month in months" class="angular-date-range-picker__month">
+        <div class="angular-date-range-picker__month-name">{{::month.name}}</div>
         <table class="angular-date-range-picker__calendar">
           <tr>
-            <th bindonce ng-repeat="day in month.weeks[1]" class="angular-date-range-picker__calendar-weekday" bo-text="day.date.format('dd')">
-            </th>
+            <th ng-repeat="day in month.weeks[1]" class="angular-date-range-picker__calendar-weekday">{{::dat.date.format('dd')}}</th>
           </tr>
-          <tr bindonce ng-repeat="week in month.weeks">
+          <tr ng-repeat="week in month.weeks">
             <td
-                bo-class='{
+                ng-class='{
                   "angular-date-range-picker__calendar-day": day,
                   "angular-date-range-picker__calendar-day-selected": day.selected,
                   "angular-date-range-picker__calendar-day-disabled": day.disabled,
                   "angular-date-range-picker__calendar-day-start": day.start
                 }'
                 ng-repeat="day in week track by $index" ng-click="select(day, $event)">
-                <div class="angular-date-range-picker__calendar-day-wrapper" bo-text="day.date.date()"></div>
+                <div class="angular-date-range-picker__calendar-day-wrapper">{{::day.date.date()}}</div>
             </td>
           </tr>
         </table>
