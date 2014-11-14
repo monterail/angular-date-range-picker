@@ -60,31 +60,33 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     model: "=ngModel" # can't use ngModelController, we need isolated scope
     customSelectOptions: "="
     ranged: "="
+    isoWeek: "="
     pastDates: "@"
     callback: "&"
 
   link: ($scope, element, attrs) ->
+    $scope.localWeekUnitName = if $scope.isoWeek then "isoWeek" else "week"
     $scope.quickListDefinitions = $scope.customSelectOptions
     $scope.quickListDefinitions ?= [
       {
         label: "This week",
         range: moment().range(
-          moment().startOf("week").startOf("day"),
-          moment().endOf("week").startOf("day")
+          moment().startOf($scope.localWeekUnitName).startOf("day"),
+          moment().endOf($scope.localWeekUnitName).startOf("day")
         )
       }
       {
         label: "Next week",
         range: moment().range(
-          moment().startOf("week").add(1, "week").startOf("day"),
-          moment().add(1, "week").endOf("week").startOf("day")
+          moment().startOf($scope.localWeekUnitName).add(1, "week").startOf("day"),
+          moment().add(1, "week").endOf($scope.localWeekUnitName).startOf("day")
         )
       }
       {
         label: "This fortnight",
         range: moment().range(
-          moment().startOf("week").startOf("day"),
-          moment().add(1, "week").endOf("week").startOf("day")
+          moment().startOf($scope.localWeekUnitName).startOf("day"),
+          moment().add(1, "week").endOf($scope.localWeekUnitName).startOf("day")
         )
       }
       {
@@ -154,7 +156,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     _prepare = () ->
       $scope.months = []
       startIndex = $scope.range.start.year()*12 + $scope.range.start.month()
-      startDay = moment().startOf("week").day()
+      startDay = moment().startOf($scope.localWeekUnitName).day()
 
       $scope.range.by "days", (date) ->
         d = date.day() - startDay
