@@ -1,6 +1,6 @@
 angular.module "dateRangePicker", ['pasvaz.bindonce']
 
-angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($compile) ->
+angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$timeout", ($compile, $timeout) ->
   # constants
   pickerTemplate = """
   <div ng-show="visible" class="angular-date-range-picker__picker" ng-click="handlePickerClick($event)" ng-class="{'angular-date-range-picker--ranged': showRanged }">
@@ -63,6 +63,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     customSelectOptions: "="
     ranged: "="
     pastDates: "@"
+    callback: "&"
 
   link: ($scope, element, attrs, formController) ->
     $scope.quickListDefinitions = $scope.customSelectOptions
@@ -132,7 +133,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
       else
         $scope.selection = false
         $scope.selection = $scope.model || false
-        $scope.date = $scope.model || moment()
+        $scope.date = moment($scope.model) || moment()
         $scope.range = moment().range(
           moment($scope.date).startOf("month"),
           moment($scope.date).endOf("month")
@@ -174,7 +175,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
             sel = $scope.selection && $scope.selection.contains(date)
         else
           sel = date.isSame($scope.selection)
-          dis = date <= moment() if $scope.pastDates
+          dis = moment().diff(date, 'days') > 0 if $scope.pastDates
 
         dis = true if $scope.limitingRange and not $scope.limitingRange.contains(date)
 
@@ -211,6 +212,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
       $scope.model = $scope.selection
+      $timeout -> $scope.callback() if $scope.callback
       $scope.hide()
       formController?.$setDirty()
 
@@ -227,7 +229,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           $scope.selection = moment().range($scope.start, day.date)
           $scope.start = null
       else
-        $scope.selection = day.date
+        $scope.selection = moment(day.date)
 
       _prepare()
 
@@ -239,7 +241,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", ($co
           $scope.range.start.clone().add(2, "months").endOf("month").startOf("day")
         )
       else
-        $scope.date = moment().month($scope.date.month() + n)
+        $scope.date.add(n, 'months')
         $scope.range = moment().range(
           moment($scope.date).startOf("month"),
           moment($scope.date).endOf("month")
