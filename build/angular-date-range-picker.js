@@ -173,6 +173,10 @@
                 $event.stopPropagation();
               }
             }
+            if ($scope.selecting) {
+              $scope.selection = moment().range($scope.start, $scope.start.clone().endOf("day"));
+              $scope.selecting = false;
+            }
             $scope.model = $scope.selection;
             $timeout(function() {
               if ($scope.callback) {
