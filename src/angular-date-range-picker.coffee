@@ -47,11 +47,11 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
   template: """
   <span tabindex="0" ng-keydown="hide()" class="angular-date-range-picker__input">
     <span ng-if="showRanged">
-      <span ng-show="!!model">{{ model.start.format("ll") }} - {{ model.end.format("ll") }}</span>
+      <span ng-show="!!model">{{ model.start.format(dateFormat) }} - {{ model.end.format(dateFormat) }}</span>
       <span ng-hide="!!model">Select date range</span>
     </span>
     <span ng-if="!showRanged">
-      <span ng-show="!!model">{{ model.format("ll") }}</span>
+      <span ng-show="!!model">{{ model.format(dateFormat) }}</span>
       <span ng-hide="!!model">Select date</span>
     </span>
   </span>
@@ -61,7 +61,8 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     customSelectOptions: "="
     ranged: "="
     pastDates: "@"
-    callback: "&"
+    callback: "&",
+    dateFormat: "@"
 
   link: ($scope, element, attrs) ->
     $scope.quickListDefinitions = $scope.customSelectOptions
@@ -107,6 +108,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
     $scope.selecting = false
     $scope.visible = false
     $scope.start = null
+    $scope.dateFormat = $scope.dateFormat or "ll"
     # Backward compatibility - if $scope.ranged is not set in the html, it displays normal date range picker.
     $scope.showRanged = if $scope.ranged == undefined then true else $scope.ranged
 
