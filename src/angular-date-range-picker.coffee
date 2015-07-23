@@ -198,6 +198,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
     $scope.hide = ($event) ->
       $event?.stopPropagation?()
+      $scope.selecting = false
       $scope.visible = false
       $scope.start = null
 
@@ -207,6 +208,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
+      $scope.select date: $scope.start.clone() if $scope.selecting
       $scope.model = $scope.selection
       $timeout -> $scope.callback() if $scope.callback
       $scope.hide()
