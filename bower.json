@@ -12,8 +12,7 @@
     "build/angular-date-range-picker.css"
   ],
   "dependencies": {
-    "angular": "~1.2",
-    "angular-bindonce": "*",
+    "angular": "~1.3",
     "moment": "^2.6.0",
     "moment-range": "~1.0.1"
   },
