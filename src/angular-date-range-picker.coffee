@@ -131,7 +131,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
       else
         $scope.selection = false
         $scope.selection = $scope.model || false
-        $scope.date = moment($scope.model) || moment()
+        $scope.date = moment($scope.model || undefined)
         $scope.range = moment().range(
           moment($scope.date).startOf("month"),
           moment($scope.date).endOf("month")
@@ -198,6 +198,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
     $scope.hide = ($event) ->
       $event?.stopPropagation?()
+      $scope.selecting = false
       $scope.visible = false
       $scope.start = null
 
@@ -207,6 +208,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
     $scope.ok = ($event) ->
       $event?.stopPropagation?()
+      $scope.select date: $scope.start.clone() if $scope.selecting
       $scope.model = $scope.selection
       $timeout -> $scope.callback() if $scope.callback
       $scope.hide()
