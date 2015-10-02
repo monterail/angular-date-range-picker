@@ -14,23 +14,25 @@
           model: "=ngModel",
           customSelectOptions: "=",
           ranged: "=",
+          isoWeek: "=",
           pastDates: "@",
           callback: "&"
         },
         link: function($scope, element, attrs) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
+          $scope.localWeekUnitName = $scope.isoWeek ? "isoWeek" : "week";
           $scope.quickListDefinitions = $scope.customSelectOptions;
           if ($scope.quickListDefinitions == null) {
             $scope.quickListDefinitions = [
               {
                 label: "This week",
-                range: moment().range(moment().startOf("week").startOf("day"), moment().endOf("week").startOf("day"))
+                range: moment().range(moment().startOf($scope.localWeekUnitName).startOf("day"), moment().endOf($scope.localWeekUnitName).startOf("day"))
               }, {
                 label: "Next week",
-                range: moment().range(moment().startOf("week").add(1, "week").startOf("day"), moment().add(1, "week").endOf("week").startOf("day"))
+                range: moment().range(moment().startOf($scope.localWeekUnitName).add(1, "week").startOf("day"), moment().add(1, "week").endOf($scope.localWeekUnitName).startOf("day"))
               }, {
                 label: "This fortnight",
-                range: moment().range(moment().startOf("week").startOf("day"), moment().add(1, "week").endOf("week").startOf("day"))
+                range: moment().range(moment().startOf($scope.localWeekUnitName).startOf("day"), moment().add(1, "week").endOf($scope.localWeekUnitName).startOf("day"))
               }, {
                 label: "This month",
                 range: moment().range(moment().startOf("month").startOf("day"), moment().endOf("month").startOf("day"))
@@ -104,7 +106,7 @@
             var m, startDay, startIndex, _i, _len, _ref;
             $scope.months = [];
             startIndex = $scope.range.start.year() * 12 + $scope.range.start.month();
-            startDay = moment().startOf("week").day();
+            startDay = moment().startOf($scope.localWeekUnitName).day();
             $scope.range.by("days", function(date) {
               var d, dis, m, sel, w, _base, _base1;
               d = date.day() - startDay;

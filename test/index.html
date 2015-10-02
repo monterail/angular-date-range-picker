@@ -37,7 +37,7 @@
       <h1>Date range picker</h1>
       <date-range-picker ng-model="range"></date-range-picker>
       <pre>{{ range.start.toDate() }} - {{ range.end.toDate() }}</pre>
-      <date-range-picker ng-model="range2" ranged="true" callback="fireCallback(range2)"></date-range-picker>
+      <date-range-picker ng-model="range2" ranged="true" iso-week="true" callback="fireCallback(range2)"></date-range-picker>
       <button ng-click="change()">Change</button>
     </div>
     <div>
