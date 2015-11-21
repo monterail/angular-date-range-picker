@@ -259,9 +259,8 @@
             });
           });
           documentClickFn = function(e) {
-            $scope.$apply(function() {
-              return $scope.hide();
-            });
+            $scope.hide();
+            $scope.$digest();
             return true;
           };
           angular.element(document).bind("click", documentClickFn);
