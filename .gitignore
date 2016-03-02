@@ -1,4 +1,11 @@
+### OSX ###
 .DS_Store
-/node_modules
-/bower_components
+
+### Build packages ###
+node_modules/
+bower_components/
 *.map
+
+### PhpStorm / IntellJ IDEA ###
+.idea/
+*.iml
