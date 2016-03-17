@@ -66,7 +66,8 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 		ranged: "="
 		showDateRangePickerOnly: "=?"
 		pastDates: "@"
-		callback: "&"
+		callback: "&",
+		customDateRange: "="
 
 	link: ($scope, element, attrs, formController) ->
 		$scope.quickListDefinitions = $scope.customSelectOptions
@@ -255,6 +256,19 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
 		$scope.handlePickerClick = ($event) ->
 			$event?.stopPropagation?()
+
+		$scope.$watch "customDateRange", (n, o) ->
+			return if !n || angular.equals(n, o)
+
+			if ($scope.customDateRange.start && $scope.customDateRange.end)
+				$scope.select({
+					date: $scope.customDateRange.start,
+					disabled: false
+				});
+				$scope.select({
+					date: $scope.customDateRange.end,
+					disabled: false
+				});
 
 		$scope.$watch "quick", (q, o) ->
 			return if !q || q == CUSTOM
