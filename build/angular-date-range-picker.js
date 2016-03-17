@@ -18,7 +18,8 @@
           ranged: "=",
           showDateRangePickerOnly: "=?",
           pastDates: "@",
-          callback: "&"
+          callback: "&",
+          customDateRange: "="
         },
         link: function($scope, element, attrs, formController) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
@@ -228,6 +229,21 @@
           $scope.handlePickerClick = function($event) {
             return $event != null ? typeof $event.stopPropagation === "function" ? $event.stopPropagation() : void 0 : void 0;
           };
+          $scope.$watch("customDateRange", function(n, o) {
+            if (!n || angular.equals(n, o)) {
+              return;
+            }
+            if ($scope.customDateRange.start && $scope.customDateRange.end) {
+              $scope.select({
+                date: $scope.customDateRange.start,
+                disabled: false
+              });
+              return $scope.select({
+                date: $scope.customDateRange.end,
+                disabled: false
+              });
+            }
+          });
           $scope.$watch("quick", function(q, o) {
             if (!q || q === CUSTOM) {
               return;
