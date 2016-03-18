@@ -35,7 +35,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
       </div>
       <div class="angular-date-range-picker__buttons">
         <a ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</a>
-        <a ng-click="hide($event)" class="angular-date-range-picker__cancel">cancel</a>
+        <a ng-click="hide($event, true)" class="angular-date-range-picker__cancel">cancel</a>
       </div>
     </div>
   </div>
@@ -67,7 +67,8 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 		showDateRangePickerOnly: "=?"
 		pastDates: "@"
 		callback: "&",
-		customDateRange: "="
+		customDateRange: "=",
+		cancelCallback: '&'
 
 	link: ($scope, element, attrs, formController) ->
 		$scope.quickListDefinitions = $scope.customSelectOptions
@@ -205,8 +206,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 			_prepare()
 			$scope.visible = true
 
-		$scope.hide = ($event) ->
+		$scope.hide = ($event, isWrappedInsideFilterBox) ->
 			$event?.stopPropagation?()
+			$timeout -> $scope.cancelCallback() if (isWrappedInsideFilterBox && $scope.cancelCallback)
 			$scope.visible = false
 			$scope.start = null
 
@@ -218,7 +220,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 			$event?.stopPropagation?()
 			$scope.model = $scope.selection
 			$timeout -> $scope.callback() if $scope.callback
-			$scope.hide()
+			$scope.hide(null, true)
 			formController?.$setDirty()
 
 		$scope.select = (day, $event) ->
