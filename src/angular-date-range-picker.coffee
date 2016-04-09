@@ -72,7 +72,6 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
 	link: ($scope, element, attrs, formController) ->
 		$scope.quickListDefinitions = $scope.customSelectOptions
-		$scope.showDateRangePickerOnly = $scope.showDateRangePickerOnly || false
 		$scope.quickListDefinitions ?= [
 			{
 				label: "This week",
@@ -302,6 +301,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
 		$scope.$on '$destroy', ->
 			angular.element(document).unbind 'click', documentClickFn
+
+		if $scope.showDateRangePickerOnly
+			$scope.selection = $scope.model
 
 		_makeQuickList()
 		_calculateRange()

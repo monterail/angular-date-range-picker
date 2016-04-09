@@ -25,7 +25,6 @@
         link: function($scope, element, attrs, formController) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
           $scope.quickListDefinitions = $scope.customSelectOptions;
-          $scope.showDateRangePickerOnly = $scope.showDateRangePickerOnly || false;
           if ($scope.quickListDefinitions == null) {
             $scope.quickListDefinitions = [
               {
@@ -291,6 +290,9 @@
           $scope.$on('$destroy', function() {
             return angular.element(document).unbind('click', documentClickFn);
           });
+          if ($scope.showDateRangePickerOnly) {
+            $scope.selection = $scope.model;
+          }
           _makeQuickList();
           _calculateRange();
           return _prepare();
