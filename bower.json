@@ -17,6 +17,15 @@
     "moment": "~2.8.2",
     "moment-range": "~1.0.1"
   },
+  "ignore" : [
+    "**/.*",
+    "src",
+    "test",
+    "Gruntfile.coffee",
+    "*.md",
+    "*.txt",
+    "package.json"
+  ],
   "license": "MIT",
   "homepage": "http://github.com/monterail/angular-date-range-picker"
 }
