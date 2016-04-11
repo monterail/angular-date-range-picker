@@ -20,7 +20,8 @@
           pastDates: "@",
           callback: "&",
           customDateRange: "=",
-          cancelCallback: '&'
+          cancelCallback: "&",
+          isClicked: "="
         },
         link: function($scope, element, attrs, formController) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
@@ -247,6 +248,14 @@
                 date: $scope.customDateRange.end,
                 disabled: false
               });
+            }
+          });
+          $scope.$watch("isClicked", function(n, o) {
+            if (!n || angular.equals(n, o)) {
+              return;
+            }
+            if ($scope.showDateRangePickerOnly) {
+              return $scope.show();
             }
           });
           $scope.$watch("quick", function(q, o) {
