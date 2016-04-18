@@ -225,7 +225,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
 		$scope.select = (day, $event) ->
 			$event?.stopPropagation?()
-			return if day.disabled
+			return if !day && day.disabled
 
 			if $scope.showRanged
 				$scope.selecting = !$scope.selecting

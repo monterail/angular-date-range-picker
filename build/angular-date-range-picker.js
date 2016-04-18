@@ -202,7 +202,7 @@
                 $event.stopPropagation();
               }
             }
-            if (day.disabled) {
+            if (!day && day.disabled) {
               return;
             }
             if ($scope.showRanged) {
