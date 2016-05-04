@@ -21,6 +21,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
                   "angular-date-range-picker__calendar-day-disabled": day.disabled,
                   "angular-date-range-picker__calendar-day-start": day.start
                 }'
+                ng-disabled="day.disabled"
                 ng-repeat="day in week track by $index" ng-click="select(day, $event)">
                 <div class="angular-date-range-picker__calendar-day-wrapper" bo-text="day.date.date()"></div>
             </td>
