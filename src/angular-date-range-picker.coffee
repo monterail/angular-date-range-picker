@@ -34,7 +34,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
       <div ng-show="showRanged">
         Select range: <select ng-click="prevent_select($event)" ng-model="quick" ng-options="e.range as e.label for e in quickList"></select>
       </div>
-      <div class="angular-date-range-picker__buttons">
+      <div class="angular-date-range-picker__buttons" ng-hide="showDateRangePickerOnly">
         <a ng-click="ok($event)" class="angular-date-range-picker__apply">Apply</a>
         <a ng-click="hide($event, true)" class="angular-date-range-picker__cancel">cancel</a>
       </div>
@@ -70,6 +70,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 		callback: "&",
 		customDateRange: "=",
 		cancelCallback: "&",
+		selectCallback: "&",
 		isClicked: "="
 
 	link: ($scope, element, attrs, formController) ->
@@ -239,6 +240,9 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 			else
 				$scope.selection = moment(day.date)
 
+			if $scope.selectCallback && !day.isCustom
+				$scope.selectCallback()
+
 			_prepare()
 
 		$scope.move = (n, $event) ->
@@ -266,10 +270,12 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 			if ($scope.customDateRange.start && $scope.customDateRange.end)
 				$scope.select({
 					date: $scope.customDateRange.start,
+					isCustom: true,
 					disabled: false
 				});
 				$scope.select({
 					date: $scope.customDateRange.end,
+					isCustom: true,
 					disabled: false
 				});
 
@@ -312,6 +318,12 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
 		if $scope.showDateRangePickerOnly
 			$scope.selection = $scope.model
+
+			$scope.$on 'cancelReportFilter', ->
+				$scope.hide(null, true)
+
+			$scope.$on 'applyReportFilter', ->
+				$scope.ok(null)
 
 		_makeQuickList()
 		_calculateRange()
