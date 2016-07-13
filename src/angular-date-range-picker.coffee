@@ -265,9 +265,10 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 			$event?.stopPropagation?()
 
 		$scope.$watch "customDateRange", (n, o) ->
-			return if !n || angular.equals(n, o)
+			return if !n
 
 			if ($scope.customDateRange.start && $scope.customDateRange.end)
+				$scope.selecting = false;
 				$scope.select({
 					date: $scope.customDateRange.start,
 					isCustom: true,

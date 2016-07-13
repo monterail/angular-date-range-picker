@@ -240,10 +240,11 @@
             return $event != null ? typeof $event.stopPropagation === "function" ? $event.stopPropagation() : void 0 : void 0;
           };
           $scope.$watch("customDateRange", function(n, o) {
-            if (!n || angular.equals(n, o)) {
+            if (!n) {
               return;
             }
             if ($scope.customDateRange.start && $scope.customDateRange.end) {
+              $scope.selecting = false;
               $scope.select({
                 date: $scope.customDateRange.start,
                 isCustom: true,
