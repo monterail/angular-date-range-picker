@@ -71,7 +71,8 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 		customDateRange: "=",
 		cancelCallback: "&",
 		selectCallback: "&",
-		isClicked: "="
+		isClicked: "=",
+		isAutoApplyMode: "=?"
 
 	link: ($scope, element, attrs, formController) ->
 		$scope.quickListDefinitions = $scope.customSelectOptions
@@ -210,7 +211,7 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 
 		$scope.hide = ($event, isWrappedInsideFilterBox) ->
 			$event?.stopPropagation?()
-			$timeout -> $scope.cancelCallback() if (isWrappedInsideFilterBox && $scope.cancelCallback)
+			$timeout -> $scope.cancelCallback() if (isWrappedInsideFilterBox && !$scope.isAutoApplyMode && $scope.cancelCallback)
 			$scope.visible = false
 			$scope.start = null
 
@@ -297,6 +298,10 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 		$scope.$watch "customSelectOptions", (value) ->
 			return unless customSelectOptions?
 			$scope.quickListDefinitions = value
+
+		$scope.$watch "selection", (value) ->
+			if (value && $scope.isAutoApplyMode)
+				$scope.ok(null);
 
 		# create DOM and bind event
 		domEl = $compile(angular.element(pickerTemplate))($scope)

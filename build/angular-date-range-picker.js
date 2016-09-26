@@ -22,7 +22,8 @@
           customDateRange: "=",
           cancelCallback: "&",
           selectCallback: "&",
-          isClicked: "="
+          isClicked: "=",
+          isAutoApplyMode: "=?"
         },
         link: function($scope, element, attrs, formController) {
           var documentClickFn, domEl, _calculateRange, _checkQuickList, _makeQuickList, _prepare;
@@ -172,7 +173,7 @@
               }
             }
             $timeout(function() {
-              if (isWrappedInsideFilterBox && $scope.cancelCallback) {
+              if (isWrappedInsideFilterBox && !$scope.isAutoApplyMode && $scope.cancelCallback) {
                 return $scope.cancelCallback();
               }
             });
@@ -280,6 +281,11 @@
               return;
             }
             return $scope.quickListDefinitions = value;
+          });
+          $scope.$watch("selection", function(value) {
+            if (value && $scope.isAutoApplyMode) {
+              return $scope.ok(null);
+            }
           });
           domEl = $compile(angular.element(pickerTemplate))($scope);
           element.append(domEl);
