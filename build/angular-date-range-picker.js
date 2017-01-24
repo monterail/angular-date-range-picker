@@ -131,7 +131,7 @@
                   sel = $scope.selection && $scope.selection.contains(date);
                 }
               } else {
-                sel = date.isSame($scope.selection);
+                sel = date._d.getFullYear() === $scope.selection._d.getFullYear() && date._d.getDate() === $scope.selection._d.getDate() && date._d.getMonth() === $scope.selection._d.getMonth();
                 if ($scope.pastDates) {
                   dis = moment().diff(date, 'days') > 0;
                 }

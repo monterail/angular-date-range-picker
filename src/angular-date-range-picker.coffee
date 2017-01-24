@@ -183,7 +183,8 @@ angular.module("dateRangePicker").directive "dateRangePicker", ["$compile", "$ti
 					else
 						sel = $scope.selection && $scope.selection.contains(date)
 				else
-					sel = date.isSame($scope.selection)
+					#This line has been replaced by sel = date.isSame($scope.selection) since we need to compare days irrespective of difference between the times of those days.
+					sel = (date._d.getFullYear() == $scope.selection._d.getFullYear() && date._d.getDate() == $scope.selection._d.getDate() && date._d.getMonth() == $scope.selection._d.getMonth());
 					dis = moment().diff(date, 'days') > 0 if $scope.pastDates
 
 				dis = true if $scope.limitingRange and not $scope.limitingRange.contains(date)
